@@ -1,0 +1,10 @@
+node_modules/
+tests/
+dev.js
+.eslintrc
+.vscode
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

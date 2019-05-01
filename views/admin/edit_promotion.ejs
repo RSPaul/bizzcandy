@@ -1,0 +1,44 @@
+<%- include('../_layouts/adminheader') %>
+
+<h2 class="page-title">Edit product</h2>
+<a href="/admin/promotions" class="btn btn-primary">Back to all promotions</a>
+<br><br>
+
+<form method="post" action="/admin/promotions/edit/<%= id %>" enctype="multipart/form-data">
+    
+    <div class="form-group">
+        <label for="">Title</label>
+        <input type="text" class="form-control" name="title" value="<%= title %>" placeholder="Title">
+    </div>
+    
+    <div class="form-group">
+        <label for="">Description</label>
+        <textarea name="description" class="form-control" id="ta" cols="30" rows="10" placeholder="Description"><%= description %></textarea>
+    </div>
+    
+    <div class="form-group">
+        <label for="">Current Image</label>
+        <p>
+            <% if (image == "") { %>
+            <img id="noimage" src="/images/noimage.png" alt="">
+            <% } else {%>
+            <img id="noimage" src="<%= promotionImageUrl %>/<%= image %>" alt="">
+            <% } %>
+        </p>
+    </div>
+    
+    <div class="form-group">
+        <label for="">Upload Image</label>
+        <input type="file" class="form-control" name="image" id="img">
+        <img src="#" id="imgPreview" alt="">
+    </div>
+    
+    <div class="form-group">
+        <label for="">Display</label>       
+        <input type="checkbox" name="display" <%if(display){%> checked <%}%> >
+    </div>
+        
+    <button class="btn btn-primary">Submit</button>
+</form>
+
+<%- include('../_layouts/adminfooter') %>

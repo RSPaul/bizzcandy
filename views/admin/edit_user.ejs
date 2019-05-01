@@ -1,0 +1,57 @@
+<%- include('../_layouts/adminheader') %>
+
+<h2 class="page-title">Edit a user</h2>
+<a href="/users" class="btn btn-primary">Back to all users</a>
+<br><br>
+
+<form method="post" action="/users/edit/<%= user.id %>">
+    
+    <div class="form-group">
+        <label for="">Name</label>
+        <input type="text" class="form-control" name="name" value="<%= user.name %>" placeholder="Name">
+    </div>
+
+    <div class="form-group">
+        <label for="">Email</label>
+        <input type="text" class="form-control" name="email" value="<%= user.email %>" placeholder="Email">
+    </div>
+
+    <div class="form-group">
+        <label>Telephone</label>
+        <input type="text" name="telephone" value="<%=user.telephone%>" class="form-control" placeholder="Telephone">
+    </div>
+
+    <div class="form-group">
+            <label>Address Line 1</label>
+            <input type="text" name="address_line1" value="<%=user.address_line1%>" class="form-control" placeholder="Address Line 1">
+        </div>
+
+        <div class="form-group">
+            <label>City</label>
+            <input type="text" name="city" value="<%=user.city%>" class="form-control" placeholder="City">
+        </div>
+
+        <div class="form-group">
+            <label>County</label>
+            <input type="text" name="county" value="<%=user.county%>" class="form-control" placeholder="County">
+        </div>
+
+        <div class="form-group">
+            <label>Postcode</label>
+            <input type="text" name="postcode" value="<%=user.postcode%>" class="form-control" placeholder="Postcode">
+        </div>
+
+        <div class="form-group">
+            <label>Country</label>
+            <input type="text" name="country" value="<%=user.country%>" class="form-control" placeholder="Country">
+        </div>                         
+
+    <div class="form-group">
+        <label for="">Discount Code (please enter brand-percentage ex: airheads-15,nerds-25)</label>
+        <input type="text" class="form-control" name="discount_code" value="<%= user.discount_code %>" placeholder="Discount Code">
+    </div>
+       
+    <button class="btn btn-primary">Submit</button>
+</form>
+
+<%- include('../_layouts/adminfooter') %>

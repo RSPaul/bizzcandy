@@ -1,0 +1,54 @@
+<%- include('../_layouts/adminheader') %>
+
+<h2 class="page-title">Products</h2>
+<a href="/admin/products/add-product" class="btn btn-primary">Add a new product</a>
+    <div class="admin-search">
+        <form method="post" action="/admin/products/search">
+        <input type="text" name="search" placeholder="Search.."><button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+    </div> 
+<br><br>
+
+<% if (count > 0) { %>
+
+<div class="col-xs-12 col-sm-12">
+    <div class="cartContent w100">
+        <table class="cartTable table-responsive">
+            <tbody>
+
+                <tr class="CartProduct cartTableHeader">
+                    <td style="width:30%">Product</td>
+                    <td style="width:30%">Price</td>                                       
+                    <td style="width:40%">Image</td>     
+                    <td style="width:20%">Edit</td>                                   
+                    <td style="width:20%">Delete</td>
+                </tr>
+
+                <% products.forEach(function(product){ %>
+                <tr class="CartProduct">
+                    <td><%= product.name %></td>    
+                    <td>£<%= parseFloat(product.price).toFixed(2) %></td>                   
+                    <td class="CartProductThumb">
+                        <div>                                                                              
+                            <% if (product.image == "") { %>
+                            <img id="noimage" src="/images/noimage.jpg">
+                            <% } else {%>
+                            <img id="noimage" src="<%=productImageUrl %>/<%= product.image %>">
+                            <% }%>                                             
+                        </div>
+                    </td>
+                    <td><a href="/admin/products/edit-product/<%= product._id %>">Edit</a></td>
+                    <td><a class="confirmDeletion" href="/admin/products/delete-product/<%= product._id %>">Delete</a></td>
+                </tr>
+                <% }); %>                
+            </tbody>
+        </table>
+    </div>    
+</div>
+<!--Content-->
+
+<% } else {%>
+<h3 class="text-center">There are no products.</h3>
+<% }%>
+
+<%- include('../_layouts/adminfooter') %>

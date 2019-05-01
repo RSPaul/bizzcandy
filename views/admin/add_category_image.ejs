@@ -1,0 +1,29 @@
+<%- include('../_layouts/adminheader') %>
+
+<h2 class="page-title">Add a category image</h2>
+<a href="/admin/category_images" class="btn btn-primary">Back to all category images</a>
+<br><br>
+
+<form method="post" action="/admin/category_images/add" enctype="multipart/form-data">
+   
+    <div class="form-group">
+        <label for="">Name</label>
+        <input type="text" class="form-control" name="name" value="<%= name %>" placeholder="Name">
+    </div>
+    
+    <div class="form-group">
+        <label for="">Link</label>
+        <input type="text" class="form-control" name="link" value="<%= link %>" placeholder="link">
+    </div>
+    
+    <div class="form-group">
+        <label for="">Image</label>
+        <input type="file" class="form-control" name="image" id="img">
+        <img src="#" id="imgPreview" alt="">
+    </div>
+
+    <button class="btn btn-primary">Submit</button>
+</form>
+<script src="../../utils/imagePreviewLoad.js"></script>   
+
+<%- include('../_layouts/adminfooter') %>

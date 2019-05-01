@@ -1,0 +1,188 @@
+var express = require('express');
+var router = express.Router();
+var passport = require('passport');
+var bcrypt = require('bcryptjs');
+var auth = require('../config/auth');
+var isAdmin = auth.isAdmin;
+
+// Get Users model
+var User = require('../models/user');
+
+/*
+* Get users
+*/
+
+router.get('/', isAdmin,  (req, res) => {
+    User.find(function (err, users) {
+        if (err) return console.log(err);
+        res.render('admin/users', {
+            users: users
+        });
+    })
+});
+
+/*
+ * GET register
+ */
+router.get('/register', function (req, res) {
+
+    res.render('register', {
+        title: 'Register'
+    });
+
+});
+
+/*
+ * POST register
+ */
+router.post('/register', function (req, res) {  
+    
+    const {name, email, telephone, address_line1, city, county, postcode, country, username, password, password2} = req.body;
+    
+    req.checkBody('name', 'Name is required!').notEmpty();
+    req.checkBody('email', 'Email is required!').isEmail();
+    req.checkBody('telephone', 'Telephone number is required!').notEmpty();
+    req.checkBody('username', 'Username is required!').notEmpty();
+    req.checkBody('password', 'Password is required!').notEmpty();
+    req.checkBody('password2', 'Passwords do not match!').equals(password);
+    
+    var errors = req.validationErrors();
+
+    if (errors) {
+        res.render('register', {
+            errors: errors,
+            user: null,
+            title: 'Register'
+        });
+    } else {
+        User.findOne({username: username}, function (err, user) {
+            if (err)
+                console.log(err);
+
+            if (user) {
+                req.flash('danger', 'Username exists, choose another!');
+                res.redirect('/users/register');
+            } else {
+                var user = new User({
+                    name,
+                    email,
+                    telephone,
+                    address_line1,
+                    city,
+                    county,
+                    postcode,
+                    country,
+                    username,
+                    password,
+                    admin: 0
+                });
+
+                bcrypt.genSalt(10, function (err, salt) {
+                    bcrypt.hash(user.password, salt, function (err, hash) {
+                        if (err)
+                            console.log(err);
+
+                        user.password = hash;
+
+                        user.save(function (err) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                req.flash('success', 'You are now registered!');
+                                res.redirect('/users/login')
+                            }
+                        });
+                    });
+                });
+            }
+        });
+    }
+
+});
+
+/*
+* Edit user
+*/
+router.get('/edit/:id', isAdmin, (req, res) => {
+
+        User.findById(req.params.id, function(err, user) {
+            if(err) console.log(err);
+            
+            res.render('admin/edit_user', {
+                user
+            });       
+        });
+    });
+   
+router.post('/edit/:id', isAdmin, (req, res) => {
+    const {name, email, telephone,  address_line1, city, county, postcode, country, discount_code} = req.body;
+    const userId = req.params.id;
+
+    req.checkBody('name', 'Name is required!').notEmpty();
+    req.checkBody('email', 'Email is required!').isEmail();
+    req.checkBody('telephone', 'Telephone number is required!').notEmpty();
+    req.checkBody('discount_code', 'Discount code is required!').notEmpty();
+
+    var errors = req.validationErrors();
+
+        User.findById(userId, (err, user) => {
+            if(err) console.log(err);
+
+            user.name = name;
+            user.email = email;
+            user.telephone = telephone;
+            user.address_line1 = address_line1,
+            user.city = city,
+            user.county = county,
+            user.postcode = postcode,
+            user.country = country,
+            user.discount_code = discount_code.split(',');
+            
+            user.save();
+
+            res.redirect('/users')
+        });
+});
+
+router.get('/delete/:id', isAdmin, (req, res) => {
+
+    User.findByIdAndRemove(req.params.id, (err) => {
+        if (err) console.log(err);
+        req.flash('success', 'user deleted!');
+        res.redirect('/users');
+    });
+
+});
+
+router.get('/login', function (req, res) {
+
+    if (res.locals.user) res.redirect('/');
+    
+    res.render('login', {
+        title: 'Log in'
+    });
+
+});
+
+router.post('/login', function (req, res, next) {
+
+    passport.authenticate('local', {
+        successRedirect: '/',
+        failureRedirect: '/users/login',
+        failureFlash: true
+    })(req, res, next);
+    
+});
+
+router.get('/logout', function (req, res) {
+
+    req.logout();
+    
+    req.flash('success', 'You are logged out!');
+    res.redirect('/users/login');
+
+});
+
+module.exports = router;
+
+

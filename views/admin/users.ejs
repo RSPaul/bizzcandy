@@ -1,0 +1,39 @@
+<%- include('../_layouts/adminheader') %>
+
+<h2 class="page-title">Users</h2>
+
+<div class="col-xs-12 col-sm-12">
+    <div class="cartContent w100">
+        <table class="cartTable table-responsive">
+            <tbody>
+
+                <tr class="CartProduct cartTableHeader">
+                    <td style="width:10%">Name</td>
+                    <td style="width:20%">Email</td>                                       
+                    <td style="width:30%">Discount Code</td>   
+                    <td style="width:10%">Telephone</td>  
+                    <td style="width:10%">Username</td>                 
+                    <td style="width:10%">Orders</td>  
+                    <td style="width:10%">Edit</td>    
+                    <td style="width:10%">Delete</td>                                                                      
+                </tr>
+
+                <% users.forEach((user) => { %>
+                <tr class="CartProduct">
+                    <td><%= user.name %></td>
+                    <td><%= user.email %></td>
+                    <td><%= user.discount_code %></td>
+                    <td><%= user.telephone %></td>
+                    <td><%= user.username %></td>
+                    <td><a href="/admin/orders/user/<%=user.id%>" alt="clicke hre view order">Orders</a></td>
+                    <td><a href="/users/edit/<%=user.id%>">Edit</a></td>
+                    <td><a class="confirmDeletion" href="/users/delete/<%=user.id%>">Delete</a></td>                
+                </tr>
+                <% }); %>                
+            </tbody>
+        </table>
+    </div>    
+</div>
+    <!--Content-->
+
+<%- include('../_layouts/adminfooter') %>
