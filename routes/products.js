@@ -143,7 +143,7 @@ function searchProduct(searchText, loggedIn, res) {
     //     { "name": { "$regex": new RegExp(searchText, "i")} }, 
     //     { "product_code": { "$regex": new RegExp(searchText, "i") }}
     // ]})
-    Product.find({ "$or": [{ "name": { "$regex": new RegExp(searchText, "i")} }, { "product_code": { "$regex": new RegExp(searchText, "i") }}]}, {"instock": true }, (err, products) => { console.log('products ', products);
+    Product.find({instock: true, {"$or": [{ "name": { "$regex": new RegExp(searchText, "i")} }, { "product_code": { "$regex": new RegExp(searchText, "i") }}]}, (err, products) => { console.log('products ', products);
         if (err) {
             console.log(err);
         }
