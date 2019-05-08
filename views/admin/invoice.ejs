@@ -15,10 +15,48 @@
         </h1>
         <div class="row userInfo">
           <div class="col-lg-12">
-            <h2 class="block-title-2">Invoice Details</h2>
+            <h2 class="block-title-2 text-left">Invoice Details</h2>
           </div>
 
-          <div class="col-sm-12" style="height:40px;">
+          <div class="col-sm-10 col-sm-10" style="height: 150px;">
+            <table class="w100">
+              <tr>
+                <td>
+                  <div class="invInfo text-left">
+                    <h3>
+                      <span><strong>Thipuj Ltd </strong></span>
+                    </h3>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h4>75 Brimsdown Road</h4>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h4>Enfield</h4>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h4>EN3 5EP</h4>
+                </td>
+              </tr>
+            </table>
+
+            <hr class="invHr" />
+          </div>
+          <div class="col-sm-2 col-sm-2" style="height: 150px;">
+            <table>
+              <tr>
+                <td><h1>Invoice</h1></td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- <div class="col-sm-12" style="height:40px;">
             <table class="w100">
               <tr>
                 <td>
@@ -29,29 +67,30 @@
                       >&nbsp;&nbsp;
                       <span><%=order.date.toDateString() %></span>
                     </h3>
-
-                    <!-- <p><span> <strong>Status: </strong></span> <span><% if(order.paid){%> Paid <%}else{%> Not Paid <%}%></span></p> -->
                   </div>
                 </td>
               </tr>
             </table>
 
             <hr class="invHr" />
-          </div>
+          </div> -->
           <div class="col-lg-6 col-sm-6 col-xs-12 col-md-6">
             <div class="order-box">
               <div class="order-box-header">
-                Client Information:
+                Sold To:
               </div>
 
               <div class="order-box-content">
                 <div class="address">
                   <p>
-                    <strong><%=order.user.name%></strong
-                    >&nbsp;<%=order.user.address_line1%>&nbsp;<%=order.user.city%>&nbsp;<%=order.user.county%>&nbsp;<%=order.user.postcode%>&nbsp;<%=order.user.country%><br />
-                    Phone: <%=order.user.telephone%> &nbsp; Email:
-                    <%=order.user.email%>
+                    <strong><%=order.user.name%></strong>
                   </p>
+                  <p>Adress: <%=order.user.address_line1%></p>
+                  <p>City: <%=order.user.city%></p>
+                  <p>Country: <%=order.user.county%></p>
+                  <p>Zip: <%=order.user.postcode%></p>
+                  <p>Phone: <%=order.user.telephone%> </p>
+                  <p>Email: <%=order.user.email%></p>
                 </div>
               </div>
             </div>
@@ -60,15 +99,16 @@
           <div class="col-lg-6 col-sm-6 col-xs-12 col-md-6">
             <div class="order-box">
               <div class="order-box-header">
-                Peyment To:
+                Other Details:
               </div>
 
               <div class="order-box-content">
                 <div class="address">
                   <p>
-                    <strong>Mr T Ganesharuban</strong>, 279 Mays Lane, Barnet,
-                    Hertfordshire EN5 2LY<br />
-                    Phone: +44 7877 884697 &nbsp; Email: bizzcandy@gmail.com
+                    Invoice Ref:&nbsp;<strong><%=order.orderNo %></strong>
+                  </p>
+                  <p>
+                    Invoice Date:&nbsp;<strong><%=order.date.toDateString() %></strong>
                   </p>
                 </div>
               </div>
@@ -80,7 +120,7 @@
           <div class="col-lg-12 col-sm-12 col-xs-12 col-md-12 clearfix">
             <div class="order-box invTable">
               <div class="order-box-header">
-                Invoice Details
+                Order Details
               </div>
 
               <div class="order-box-content ">
@@ -94,6 +134,8 @@
                         <th>VAT</th>
                         <th>Quantity</th>
                         <th>Unit Cost</th>
+                        <th>Sub Total</th>
+                        <th>Discount</th>
                         <th>Total</th>
                       </tr>
                     </thead>
@@ -103,9 +145,17 @@
                         <td scope="row"><%=index + 1%></td>
                         <td><%=item.title%></td>
                         <td><%=item.product_code%></td>
-                        <td><%if(item.vat){%>1 <%}else{%> 0 <%}%></td>
+                        <td><%if(item.vat){%> 20% <%}else{%> 0 <%}%></td>
                         <td><%=item.qty%></td>
                         <td><%=parseFloat(item.price).toFixed(2)%></td>
+                        <td><%=parseFloat(item.qty * item.price).toFixed(2)%></td>
+                        <td >
+                          <% if(order.user && order.user.discount_code && order.user.discount_code[0]) { %>
+                          <%= order.user.discount_code[0] %>
+                          <% } else {%>
+                            0
+                          <% }%>
+                        </td>
                         <td align="right">
                           <%=parseFloat(item.qty * item.price).toFixed(2)%>
                         </td>

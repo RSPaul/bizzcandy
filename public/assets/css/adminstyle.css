@@ -46,3 +46,12 @@ table.alignmiddle td {
     height: 28px !important;
     width: 110px;
 }
+.address {
+    padding: 5px;
+}
+.address p {
+    margin: 0px;
+}
+.order-box-header {
+    padding: 5px;
+}
