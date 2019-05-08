@@ -20,7 +20,7 @@
                 <% orders.forEach(order => { %>
                 <tr class="CartProduct">
                     <td><a href="/admin/orders/<%= order.id %>"><%= order.orderNo %></a></td>                                         
-                    <% if(order.user > 0) {%>
+                    <% if(order.user) {%>
                     <td><%= order.user.name %></td>
                     <% } else { %>
                     <td></td>

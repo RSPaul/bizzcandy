@@ -139,7 +139,11 @@ function searchProduct(searchText, loggedIn, res) {
         return;
     }
 
-    Product.find({ "name": { '$regex': new RegExp(searchText, "i") }, "instock": true }, (err, products) => {
+    // db.users.find({ "$or": [
+    //     { "name": { "$regex": new RegExp(searchText, "i")} }, 
+    //     { "product_code": { "$regex": new RegExp(searchText, "i") }}
+    // ]})
+    Product.find({ "$or": [{ "name": { "$regex": new RegExp(searchText, "i")} }, { "product_code": { "$regex": new RegExp(searchText, "i") }}]}, {"instock": true }, (err, products) => {
         if (err) {
             console.log(err);
         }
