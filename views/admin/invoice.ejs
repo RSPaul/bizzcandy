@@ -162,7 +162,7 @@
                           <% discountName = order.user.discount_code[0].split("-")[0]; %>
                           <% productBrand = item.title.split("-")[0] %> 
                           <% if(productBrand.toLowerCase() == discountName.toLowerCase()) { %> 
-                            <%= order.user.discount_code[0]  + "("+ discount +"%)"%>
+                            <%= "("+ discount +"%)"%>
                             <% } else {%>
                               NA
                             <% }%>
@@ -185,7 +185,7 @@
                         </td> -->
                         <!-- if discount subtract from sub total -->
                         <td align="center">
-                          <% if(productBrand && discountName && productBrand != '' && productBrand == discountName) { %>
+                          <% if(productBrand && discountName && productBrand != '' && productBrand.toLowerCase() == discountName.toLowerCase()) { %>
                           <% subTotalAmt = parseFloat(item.qty * item.price).toFixed(2)%>
                           <% discountAmt = parseFloat((subTotalAmt/100) * discount).toFixed(2)%>
                           <%= subTotalAmt = parseFloat(subTotalAmt - discountAmt).toFixed(2) %>
