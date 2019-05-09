@@ -3,7 +3,8 @@ tests/
 dev.js
 .eslintrc
 .vscode
-
+config/database.js
+config/email.js
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
