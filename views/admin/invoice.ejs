@@ -162,7 +162,7 @@
                           <% discountName = order.user.discount_code[0].split("-")[0]; %>
                           <% productBrand = item.title.split("-")[0] %> 
                           <% if(productBrand.toLowerCase() == discountName.toLowerCase()) { %> 
-                            <%= "("+ discount +"%)"%>
+                            <%= discount %>
                             <% } else {%>
                               NA
                             <% }%>
