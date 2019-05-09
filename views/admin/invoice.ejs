@@ -147,6 +147,7 @@
                       <% subTotalAmtAll = 0%>
                       <% vatTotalAmt = 0%>
                       <% productBrand = ''%>
+                      <% discountName = ''%>
                       <% order.items.forEach((item, index) => {%>
                       <tr>
                         <td align="center" scope="row"><%=index + 1%></td>
@@ -184,7 +185,7 @@
                         </td> -->
                         <!-- if discount subtract from sub total -->
                         <td align="center">
-                          <% if(productBrand == discountName) { %>
+                          <% if(productBrand && discountName && productBrand != '' && productBrand == discountName) { %>
                           <% subTotalAmt = parseFloat(item.qty * item.price).toFixed(2)%>
                           <% discountAmt = parseFloat((subTotalAmt/100) * discount).toFixed(2)%>
                           <%= subTotalAmt = parseFloat(subTotalAmt - discountAmt).toFixed(2) %>
