@@ -44,6 +44,9 @@ var UserSchema = mongoose.Schema({
     discount_code: {
         type: [String],
         trim: true
+    },
+    reset_password_link: {
+        type: String
     }
     
 });

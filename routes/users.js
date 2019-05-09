@@ -2,7 +2,10 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var bcrypt = require('bcryptjs');
+var nodemailer = require('nodemailer');
+var crypto = require('crypto');
 var auth = require('../config/auth');
+var email = require('../config/email');
 var isAdmin = auth.isAdmin;
 
 // Get Users model
@@ -27,7 +30,8 @@ router.get('/', isAdmin,  (req, res) => {
 router.get('/register', function (req, res) {
 
     res.render('register', {
-        title: 'Register'
+        title: 'Register',
+        data: {name: "", email:"", telephone:"", address_line1:"", city:"", county:"", postcode:"", country:"", username:"", password:"", password2:""}
     });
 
 });
@@ -52,7 +56,8 @@ router.post('/register', function (req, res) {
         res.render('register', {
             errors: errors,
             user: null,
-            title: 'Register'
+            title: 'Register',
+            data: req.body
         });
     } else {
         User.findOne({username: username}, function (err, user) {
@@ -61,7 +66,13 @@ router.post('/register', function (req, res) {
 
             if (user) {
                 req.flash('danger', 'Username exists, choose another!');
-                res.redirect('/users/register');
+                // res.redirect('/users/register');
+                res.render('register', {
+                    errors: errors,
+                    user: null,
+                    title: 'Register',
+                    data: req.body
+                });
             } else {
                 var user = new User({
                     name,
@@ -159,7 +170,8 @@ router.get('/login', function (req, res) {
     if (res.locals.user) res.redirect('/');
     
     res.render('login', {
-        title: 'Log in'
+        title: 'Log in',
+        data: {username: "", password:""}
     });
 
 });
@@ -181,6 +193,134 @@ router.get('/logout', function (req, res) {
     req.flash('success', 'You are logged out!');
     res.redirect('/users/login');
 
+});
+
+router.get('/forgot', function (req, res) {
+
+    res.render('forgot_password', {
+        title: 'Forgot Password',
+        email: ''
+    });
+
+});
+
+router.post('/forgot', function (req, res) {
+    User.findOne({email: req.body.email}, (err, user) => {
+            if(err) console.log(err);
+
+            if(user) {
+                crypto.randomBytes(20, function(err, buf) {
+                    var token = buf.toString('hex');
+                    //update user token
+                    user.reset_password_link = token;
+                    user.save(function(saved) { console.log('user updated');
+                        //send email
+                        var smtpTransport = nodemailer.createTransport({
+                         service: email.SMTP_SERVICE,
+                         auth: {
+                                user: email.SMTP_USER,
+                                pass: email.SMTP_PASS
+                            }
+                        });
+                        var mailOptions = {
+                            to: user.email,
+                            from: 'support@bizzcandy.com',
+                            subject: 'Password Reset',
+                            text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+                              'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                              'http://' + req.headers.host + '/users/reset/' + token + '\n\n' +
+                              'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+                        };
+                        smtpTransport.sendMail(mailOptions, function(err) {
+                            if(err) {
+                                req.flash('danger', 'Something went wrong, please try again.');
+                            } else {
+                                req.flash('success', 'An e-mail has been sent to ' + req.body.email + ' with further instructions.');
+                            }
+                            // done(err, 'done');
+                            res.render('forgot_password', {
+                                title: 'Forgot Password',
+                                email: ""
+                            });
+                        });
+                    });
+                    
+                });
+
+            } else {
+                req.flash('danger', 'User not found!');
+                res.render('forgot_password', {
+                    title: 'Forgot Password',
+                    email: req.body.email
+                });
+            }
+        });
+
+});
+
+router.get('/reset/:token', function(req, res) {
+  User.findOne({ reset_password_link: req.params.token}, function(err, user) {
+    if (!user) {
+      req.flash('error', 'Password reset token is invalid or has expired.');
+      return res.redirect('/users/forgot');
+    }
+    res.render('reset_password', {
+      user: user,
+      token: req.params.token,
+      title: 'Reset Password',
+    });
+  });
+});
+
+router.post('/reset/:token', function(req, res) {
+  User.findOne({ reset_password_link: req.params.token}, function(err, user) {
+    if (user) {
+        //match password and cpassword
+        if(req.body.password === req.body.cpassword) {            
+            //update password
+            bcrypt.genSalt(10, function (err, salt) {
+                bcrypt.hash(req.body.password, salt, function (err, hash) {
+                    if (err)
+                        console.log(err);
+                    user.password = hash;
+                    user.reset_password_link = "";
+                    user.save(function (err) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            //send password change email
+                            var smtpTransport = nodemailer.createTransport({
+                             service: email.SMTP_SERVICE,
+                             auth: {
+                                    user: email.SMTP_USER,
+                                    pass: email.SMTP_PASS
+                                }
+                            });
+                            var mailOptions = {
+                                to: user.email,
+                                from: 'support@bizzcandy.com',
+                                subject: 'Your password has been changed',
+                                text: 'Hello,\n\n' +
+                                'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+                            };
+                            smtpTransport.sendMail(mailOptions, function(err) {
+                            });
+                            req.flash('success', 'You password has been changed, login with new password.');
+                            res.redirect('/users/login')
+                        }
+                    });
+                });
+            });
+        } else {
+            req.flash('error', 'Password and confirm password do not match.');
+            return res.redirect('/users/reset/' + req.params.token);
+        }
+      
+    } else {
+        req.flash('error', 'Password reset link is invalid or has expired.');
+        return res.redirect('/users/forgot');
+    }
+  });
 });
 
 module.exports = router;
