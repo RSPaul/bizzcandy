@@ -6,7 +6,7 @@
 <div class="container main-container">
   <div class=" invoice-wrapper content">
     <div class="row">
-      <div class="col-lg-12 col-xs-12 col-sm-12 col-xs-12">
+      <div class="col-lg-12 col-xs-12 col-sm-12 col-xs-12" id="invoicePrint">
         <h1 class="section-title-inner">
           <span>
             <img src="/images/logo.png" alt="Company"/> Invoice
@@ -51,7 +51,7 @@
               </tr>
             </table>
 
-            <hr class="invHr" />
+            <!-- <hr class="invHr" /> -->
           </div>
           <div class="col-sm-6 col-md-6" style="height: 150px;">
             <div class="order-box">
@@ -312,23 +312,34 @@
 
           <div style="clear: both"></div>
 
-          <div class="col-lg-12 clearfix hidePrint">
-            <ul class="pager">
-              <li class="previous pull-right">
-                <a class="btn btn-print" onclick="javascript:window.print();">
-                  <i class="fa fa-print"></i> Print
-                </a>
-              </li>
-              <li class="next pull-left">
-                <a href="/admin/orders/<%=order._id%>"> ← Back to Order</a>
-              </li>
-            </ul>
-          </div>
+          
         </div>
         <!--/row end-->
+      </div>
+      <div class="col-lg-12 clearfix hidePrint">
+        <ul class="pager">
+          <li class="previous pull-right">
+            <a class="btn btn-print" onclick="printInvoice('invoicePrint')">
+              <i class="fa fa-print"></i> Print
+            </a>
+          </li>
+          <li class="next pull-left">
+            <a href="/admin/orders/<%=order._id%>"> ← Back to Order</a>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  function printInvoice(divName){
+    var printContents = document.getElementById(divName).innerHTML;
+    var originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+  }
+</script>
 
 <%- include('../_layouts/adminfooter') %>
