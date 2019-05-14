@@ -1,0 +1,17 @@
+<%- include('../_layouts/adminheader') %>
+
+<h2 class="page-title">Add a warehouse</h2>
+<a href="/admin/warehouses" class="btn btn-primary">Back to all warehouses</a>
+<br><br>
+
+<form method="post" action="/admin/warehouses/add-warehouse">
+    
+    <div class="form-group">
+        <label for="">Name</label>
+        <input type="text" class="form-control" name="name" value="<%= name %>" placeholder="Name">
+    </div>
+    
+    <button class="btn btn-primary">Submit</button>
+</form>
+
+<%- include('../_layouts/adminfooter') %>

@@ -10,6 +10,7 @@ const adminCategories = require('../routes/admin_categories.js');
 const adminCategoryImages = require('../routes/admin_category_images.js');
 const adminProducts = require('../routes/admin_products.js');
 const adminPromotions = require('../routes/admin_promotions.js');
+const adminWarehouses = require('../routes/admin_warehouses.js');
 const adminOrders = require('../routes/admin_orders.js');
 
 module.exports = function (app) {
@@ -20,6 +21,7 @@ module.exports = function (app) {
     app.use('/admin/category_images', adminCategoryImages);
     app.use('/admin/products', adminProducts);
     app.use('/admin/promotions', adminPromotions);
+    app.use('/admin/warehouses', adminWarehouses);
     app.use('/products', products);
     app.use('/cart', cart);
     app.use('/users', users);

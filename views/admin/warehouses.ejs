@@ -1,0 +1,27 @@
+<%- include('../_layouts/adminheader') %>
+
+<h2 class="page-title">Warehouses</h2>
+<a href="/admin/warehouses/add-warehouse" class="btn btn-primary">Add a new warehouse</a>
+<br><br>
+
+<table class="table table-striped">
+
+    <thead>
+        <tr>
+            <th>Warehouse</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% warehouses.forEach(function(warehouse){ %>
+        <tr>
+            <td><%= warehouse.name %></td>
+            <td><a href="/admin/warehouses/edit-warehouse/<%= warehouse._id %>">Edit</a></td>
+            <td><a class="confirmDeletion" href="/admin/warehouses/delete-warehouse/<%= warehouse._id %>">Delete</a></td>
+        </tr>
+        <% }); %>
+    </tbody>
+</table>
+
+<%- include('../_layouts/adminfooter') %>

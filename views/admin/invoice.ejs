@@ -18,7 +18,7 @@
             <h2 class="block-title-2 text-left">Invoice Details</h2>
           </div>
 
-          <div class="col-sm-10 col-sm-10" style="height: 150px;">
+          <div class="col-sm-6 col-md-6" style="height: 210px;">
             <table class="w100">
               <tr>
                 <td>
@@ -44,16 +44,40 @@
                   <h4>EN3 5EP</h4>
                 </td>
               </tr>
+              <tr>
+                <td>
+                  <h4>VAT No:&nbsp;<strong>242217538</strong></h4>
+                </td>
+              </tr>
             </table>
 
             <hr class="invHr" />
           </div>
-          <div class="col-sm-2 col-sm-2" style="height: 150px;">
-            <table>
-              <tr>
-                <td><h1>Invoice</h1></td>
-              </tr>
-            </table>
+          <div class="col-sm-6 col-md-6" style="height: 150px;">
+            <div class="order-box">
+              <div class="order-box-header">
+                Sold To:
+              </div>
+
+              <div class="order-box-content">
+                <div class="address">
+                  <p>
+                    <strong><%=order.user.name%></strong>
+                  </p>
+                  <p><%=order.user.address_line1%></p>
+                  <p><%=order.user.city%></p>
+                  <p><%=order.user.county%></p>
+                  <p><%=order.user.postcode%></p>
+                  <p>
+                    Invoice Ref:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><%=order.orderNo %></strong>
+                  </p>
+                  <p>
+                    Invoice Date:&nbsp;&nbsp;&nbsp;&nbsp;<strong>
+                      <span id="invoiceDate"><%= order.date; %></span></strong>
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- <div class="col-sm-12" style="height:40px;">
@@ -74,7 +98,7 @@
 
             <hr class="invHr" />
           </div> -->
-          <div class="col-lg-6 col-sm-6 col-xs-12 col-md-6">
+          <!-- <div class="col-lg-6 col-sm-6 col-xs-12 col-md-6">
             <div class="order-box">
               <div class="order-box-header">
                 Sold To:
@@ -94,15 +118,15 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
 
-          <div class="col-lg-6 col-sm-6 col-xs-12 col-md-6">
-            <div class="order-box">
-              <div class="order-box-header">
+          <!-- <div class="col-lg-6 col-sm-6 col-xs-12 col-md-6">
+            <div class="order-box"> -->
+              <!-- <div class="order-box-header">
                 Other Details:
-              </div>
+              </div> -->
 
-              <div class="order-box-content">
+             <!--  <div class="order-box-content">
                 <div class="address">
                   <p>
                     Invoice Ref:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><%=order.orderNo %></strong>
@@ -116,7 +140,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <div style="clear: both"></div>
 
@@ -139,8 +163,8 @@
                         <th>Discount</th>
                         <!-- <th>Discount Amt</th> -->
                         <th>Sub Total</th>
-                        <th>VAT</th>
-                        <th>Total</th>
+                        <!-- <th>VAT</th>
+                        <th>Total</th> -->
                       </tr>
                     </thead>
                     <tbody>
@@ -196,13 +220,15 @@
                             <%= subTotalAmt%>
                           <% } %>
                         </td>
-                        <td><%if(item.vat){%> 20% <%}else{%> 0 <%}%></td>
-                        <td align="center">
+                        <td>
+                          <%if(item.vat){ %>
+                        <!-- <td align="center"> -->
                           <% totalAmount = subTotalAmt%>
                           <% vatAmt = parseFloat((totalAmount/100) * 20).toFixed(2)%>
                           <% vatTotalAmt = parseFloat(parseFloat(vatTotalAmt) + parseFloat(vatAmt))%>
-                          <%=totalAmount = parseFloat(parseFloat(totalAmount) + parseFloat(vatAmt)).toFixed(2)%>
-                        </td>
+                          <% totalAmount = parseFloat(parseFloat(totalAmount) + parseFloat(vatAmt)).toFixed(2)%>
+                          <% } %>
+                       <!--  </td> -->
                       </tr>
                       <%})%>
 
@@ -241,7 +267,7 @@
                                 >
                                   <div style="">
                                     <span>
-                                      Tax
+                                      VAT
                                     </span>
                                   </div>
                                 </td>

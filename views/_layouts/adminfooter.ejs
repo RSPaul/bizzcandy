@@ -59,11 +59,19 @@
 <!-- include custom script for site  -->
 <script src="/assets/js/script.js"></script>
 
+<!-- moment.js  -->
+<script src="/assets/js/moment.min.js"></script>
+
 <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.20/jquery.fancybox.min.js"></script>
 
 <script src="//cdn.ckeditor.com/4.7.1/standard/ckeditor.js"></script>
 <script src="/assets/js/site.js"></script>
 
+<script type="text/javascript">
+  var NowMoment = moment();
+  var eDisplayMoment = document.getElementById('invoiceDate');
+  eDisplayMoment.innerHTML = NowMoment.format('DD-M-YYYY');
+</script>
 </body>
 </html>
