@@ -47,6 +47,10 @@ router.post('/register', function (req, res) {
     req.checkBody('email', 'Email is required!').isEmail();
     req.checkBody('telephone', 'Telephone number is required!').notEmpty();
     req.checkBody('username', 'Username is required!').notEmpty();
+    req.checkBody('address_line1', 'Address is required!').notEmpty();
+    req.checkBody('city', 'City is required!').notEmpty();
+    req.checkBody('county', 'County is required!').notEmpty();
+    req.checkBody('country', 'country is required!').notEmpty();
     req.checkBody('password', 'Password is required!').notEmpty();
     req.checkBody('password2', 'Passwords do not match!').equals(password);
     
