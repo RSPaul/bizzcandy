@@ -18,9 +18,10 @@
 
                 <tr class="CartProduct cartTableHeader">
                     <td style="width:25%">Product</td>
-                    <td style="width:15%">Price</td>                        
+                    <td style="width:15%">Price</td>
+                    <td style="width:10%">Warehouse</td>                        
                     <td style="width:15%">Code</td>          
-                    <td style="width:30%">Image</td>     
+                    <td style="width:20%">Image</td>     
                     <td style="width:10%">Edit</td>                                   
                     <td style="width:10%">Delete</td>
                 </tr>
@@ -29,6 +30,7 @@
                 <tr class="CartProduct">
                     <td><%= product.name %></td>    
                     <td>£<%= parseFloat(product.price).toFixed(2) %></td>
+                    <td class="capitalize"><%= product.warehouse.replace(/\-+/g, " ") %></td>
                     <td><%= product.product_code %></td>
                     <td class="CartProductThumb">
                         <div>                                                                              

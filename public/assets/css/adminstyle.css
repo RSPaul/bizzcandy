@@ -55,3 +55,7 @@ table.alignmiddle td {
 .order-box-header {
     padding: 5px;
 }
+
+.capitalize {
+    text-transform:capitalize;
+}
