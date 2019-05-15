@@ -9,6 +9,13 @@ var passport = require('passport');
 
 
 // Connect to db
+// const authData =  {
+//     "user": 'bizzcandy',
+//     "pass": 'bizzcandy@123',
+//     "useNewUrlParser": true,
+//     "useCreateIndex": true
+// }; 
+// mongoose.connect(config.database,{auth: {user: 'bizzcandy',password: 'bizzcandy@123'},useNewUrlParser: true });
 mongoose.connect(config.database, { useNewUrlParser: true });
 //mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/cmscart');
 var db = mongoose.connection;

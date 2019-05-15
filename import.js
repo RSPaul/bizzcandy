@@ -110,6 +110,29 @@ var app = express();
 // require('./startup/routes')(app);
 
 var Product = require('./models/product');
+
+//update ware houses for products
+app.get('/w', function (req, res) {
+      Product.find({brand: "jelly-belly"}, function(err, products) {
+        console.log('products ', products , products.length);
+        products.map(product => {
+          updateProduct(product, function (err, updated) {
+            if(err) console.log('not updated', product.slug);
+            else console.log('updated', product.slug);
+          });
+        });
+      });
+  res.send('done');
+});
+
+function updateProduct(product, callback) {
+  product.warehouse = 'jelly-belly';
+  product.save(function (err, saved) {
+    console.log('err, saved ', err, saved);
+    callback(err, saved)
+  });
+}
+
 app.get('/', function (req, res) {
       const readXlsxFile = require('read-excel-file/node');
       var foundCounter = 0;

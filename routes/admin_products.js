@@ -9,6 +9,7 @@ var s3Bucket = bucket("sweet-product-images");
 var Product = require("../models/product");
 var Brand = require("../models/brand");
 var Category = require("../models/category");
+var Warehouse = require('../models/warehouses');
 
 router.get("/", isAdmin, function(req, res) {
   Product.find(function(err, products) {
@@ -53,13 +54,16 @@ router.get("/add-product", isAdmin, function(req, res) {
 
   Brand.find(function(err, brands) {
     Category.find(function(err, categories) {
-      res.render("admin/add_product", {
-        name: name,
-        desc: desc,
-        brands: brands,
-        categories: categories,
-        price: price,
-        product_code: product_code
+      Warehouse.find(function(err, warehouses) {
+        res.render("admin/add_product", {
+          name: name,
+          desc: desc,
+          brands: brands,
+          categories: categories,
+          price: price,
+          product_code: product_code,
+          warehouses: warehouses
+        });
       });
     });
   });
@@ -81,21 +85,26 @@ router.post("/add-product", function(req, res) {
   var brand = req.body.brand;
   var category = req.body.category;
   var product_code = req.body.product_code;
+  var warehouse = req.body.warehouse;
 
   var errors = req.validationErrors();
 
   if (errors) {
     Brand.find(function(err, brands) {
       Category.find(function(err, categories) {
-        res.render("admin/add_product", {
-          errors: errors,
-          name: name,
-          brand: brand,
-          desc: desc,
-          brands: brands,
-          price: price,
-          product_code: product_code,
-          categories: categories
+        Warehouse.find(function(err, warehouses) {
+          res.render("admin/add_product", {
+            errors: errors,
+            name: name,
+            brand: brand,
+            desc: desc,
+            brands: brands,
+            price: price,
+            product_code: product_code,
+            categories: categories,
+            warehouses: warehouses,
+            warehouse: warehouse
+          });
         });
       });
     });
@@ -104,14 +113,18 @@ router.post("/add-product", function(req, res) {
       if (product) {
         req.flash("danger", "Product name exists, choose another.");
         Brand.find(function(err, brands) {
-          Category.find(function(err, categories) {
-            res.render("admin/add_product", {
-              name: name,
-              desc: desc,
-              brands: brands,
-              price: price,
-              product_code: product_code,
-              categories: categories
+          Warehouse.find(function(err, warehouses) {
+            Category.find(function(err, categories) {
+              res.render("admin/add_product", {
+                name: name,
+                desc: desc,
+                brands: brands,
+                price: price,
+                product_code: product_code,
+                categories: categories,
+                warehouses: warehouses,
+                warehouse: warehouse
+              });
             });
           });
         });
@@ -129,7 +142,8 @@ router.post("/add-product", function(req, res) {
           vat: true,
           product_code: product_code,
           featured: false,
-          category: category
+          category: category,
+          warehouse: warehouse
         });
 
         product.save(function(err) {
@@ -158,28 +172,32 @@ router.get("/edit-product/:id", isAdmin, function(req, res) {
   Brand.find(function(err, brands) {
     Category.find(function(err, categories) {
       Product.findById(req.params.id, function(err, p) {
-        if (err) {
-          console.log(err);
-          res.redirect("/admin/products");
-        } else {
-          res.render("admin/edit_product", {
-            name: p.name,
-            errors: errors,
-            desc: p.desc,
-            brands: brands,
-            brand: p.brand.replace(/\s+/g, "-").toLowerCase(),
-            price: parseFloat(p.price).toFixed(2),
-            image: p.image,
-            productImageUrl: paths.s3ImageUrl,
-            instock: p.instock,
-            vat: p.vat,
-            featured: p.featured,
-            product_code: p.product_code == "undefined" ? "" : p.product_code,
-            id: p._id,
-            category: p.category == "undefined" ? "" : p.category,
-            categories: categories
-          });
-        }
+        Warehouse.find(function(err, warehouses) {
+          if (err) {
+            console.log(err);
+            res.redirect("/admin/products");
+          } else {
+            res.render("admin/edit_product", {
+              name: p.name,
+              errors: errors,
+              desc: p.desc,
+              brands: brands,
+              brand: p.brand.replace(/\s+/g, "-").toLowerCase(),
+              price: parseFloat(p.price).toFixed(2),
+              image: p.image,
+              productImageUrl: paths.s3ImageUrl,
+              instock: p.instock,
+              vat: p.vat,
+              featured: p.featured,
+              product_code: p.product_code == "undefined" ? "" : p.product_code,
+              id: p._id,
+              category: p.category == "undefined" ? "" : p.category,
+              warehouse: p.warehouse == "undefined" ? "" : p.warehouse,
+              categories: categories,
+              warehouses: warehouses
+            });
+          }
+        });
       });
     });
   });
@@ -206,6 +224,7 @@ router.post("/edit-product/:id", function(req, res) {
   var id = req.params.id;
   var product_code = req.body.product_code;
   var category = req.body.category;
+  var warehouse = req.body.warehouse;
 
   var errors = req.validationErrors();
 
@@ -238,6 +257,7 @@ router.post("/edit-product/:id", function(req, res) {
           p.featured = featured == "on" ? true : false;
           p.product_code = product_code;
           p.category = category;
+          p.warehouse = warehouse;
 
           p.save(function(err) {
             var productImage = req.files.image;

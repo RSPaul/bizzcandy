@@ -6,6 +6,7 @@ dev.js
 config/database.js
 orders/
 config/email.js
+import.js
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
