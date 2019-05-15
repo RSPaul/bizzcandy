@@ -47,12 +47,12 @@
         <label for="">Warehouse</label>
         <select name="warehouse" class="form-control">
             <option value="">select warehouse</option>
-            <% warehouses.forEach(function(warehouse){ %>
-                <option value="<%= warehouse.slug %>"
-                    <% if (warehouse.slug == warehouse) { %>
+            <% warehouses.forEach(function(warehouseEach){ %>
+                <option value="<%= warehouseEach.slug %>"
+                    <% if (warehouseEach.slug == warehouse) { %>
                 selected="selected"
                 <% } %> 
-                ><%= warehouse.name %></option>
+                ><%= warehouseEach.name %></option>
             <% }); %>
         </select>
     </div>
