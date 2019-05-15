@@ -48,7 +48,11 @@
         <select name="warehouse" class="form-control">
             <option value="">select warehouse</option>
             <% warehouses.forEach(function(warehouse){ %>
-                <option value="<%= warehouse.slug %>"><%= warehouse.name %></option>
+                <option value="<%= warehouse.slug %>"
+                    <% if (warehouse.slug == warehous) { %>
+                selected="selected"
+                <% } %> 
+                ><%= warehouse.name %></option>
             <% }); %>
         </select>
     </div>

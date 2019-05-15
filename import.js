@@ -112,11 +112,12 @@ var app = express();
 var Product = require('./models/product');
 
 //update ware houses for products
-app.get('/w', function (req, res) {
-      Product.find({brand: "jelly-belly"}, function(err, products) {
-        console.log('products ', products , products.length);
+app.get('/w/:brand', function (req, res) {
+      var brand = req.params.brand; 
+      Product.find({brand: {$ne: "jelly-belly"}}, function(err, products) {
+        // console.log('products ', products , products.length);
         products.map(product => {
-          updateProduct(product, function (err, updated) {
+          updateProduct(product, brand, function (err, updated) {
             if(err) console.log('not updated', product.slug);
             else console.log('updated', product.slug);
           });
@@ -125,10 +126,10 @@ app.get('/w', function (req, res) {
   res.send('done');
 });
 
-function updateProduct(product, callback) {
-  product.warehouse = 'jelly-belly';
+function updateProduct(product, brand, callback) {
+  product.warehouse = brand;
   product.save(function (err, saved) {
-    console.log('err, saved ', err, saved);
+    // console.log('err, saved ', err, saved);
     callback(err, saved)
   });
 }
