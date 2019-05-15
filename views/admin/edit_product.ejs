@@ -49,7 +49,7 @@
             <option value="">select warehouse</option>
             <% warehouses.forEach(function(warehouse){ %>
                 <option value="<%= warehouse.slug %>"
-                    <% if (warehouse.slug == warehous) { %>
+                    <% if (warehouse.slug == warehouse) { %>
                 selected="selected"
                 <% } %> 
                 ><%= warehouse.name %></option>
