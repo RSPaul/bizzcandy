@@ -106,6 +106,8 @@
           <div class="price">
             <span>£<%= parseFloat(p.price).toFixed(2) %></span>
           </div>
+          <p class="weight">Weight(g):<%= p.weight_g %></p>
+          <p class="weight">Weight(oz):<%= p.weight_oz %></p>
           <% } %>
           <div class="action-control">
             <% if (loggedIn) { %>
@@ -114,6 +116,7 @@
                 ><i class="glyphicon glyphicon-shopping-cart"> </i> Add to cart
               </span>
             </a>
+
             <% } else {%>
             <p>Please login to see price.</p>
             <% } %>
