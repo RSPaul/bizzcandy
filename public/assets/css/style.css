@@ -2611,7 +2611,7 @@ h1.bolder-style.dark, h1.bolder-style.dark a {
     -o-transition: all 0.3s ease 0s;
     -ms-transition: all 0.3s ease 0s;
     margin-bottom: 15px;
-    height: 400px;
+    height: 440px;
 
 }
 
@@ -6521,4 +6521,7 @@ div.quickview {
 }
 .w100 h4{
     line-height: 10px;
+}
+p.weight {
+    margin: 0;
 }

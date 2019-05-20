@@ -50,10 +50,21 @@
     </div>
 
     <div class="form-group">
+        <label for="">Weight (grams)</label>
+        <input type="text" class="form-control" id="weight_g" name="weight_g" value="<%= weight_g %>" placeholder="Weight (grams)" oninput="weightConverter(this.value)" onchange="weightConverter(this.value)">
+    </div>
+
+    <div class="form-group">
+        <label for="">Weight (Ounces)</label>
+        <input type="text" class="form-control" id="weight_oz" name="weight_oz" value="<%= weight_oz %>" placeholder="Weight (Ounces)">
+    </div>
+
+    <div class="form-group">
         <label for="">Product Code</label>
         <input type="text" class="form-control" name="product_code" value="<%= product_code %>" placeholder="Product Code">
     </div>
 
+    
     <div class="form-group">
         <label for="">Image</label>
         <input type="file" class="form-control" name="image" id="img">

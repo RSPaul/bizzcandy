@@ -42,6 +42,12 @@ var ProductSchema = mongoose.Schema({
     }, 
     warehouse: {
         type: String
+    }, 
+    weight_g: {
+        type: Number
+    },
+    weight_oz: {
+        type: Number
     }    
     
 });

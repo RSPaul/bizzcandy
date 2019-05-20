@@ -70,8 +70,14 @@
 
 <script type="text/javascript">
   var NowMoment = moment();
-  var eDisplayMoment = document.getElementById('invoiceDate');
-  eDisplayMoment.innerHTML = NowMoment.format('DD-M-YYYY');
+  if(document.getElementById('invoiceDate')) {    
+    var eDisplayMoment = document.getElementById('invoiceDate');
+    eDisplayMoment.innerHTML = NowMoment.format('DD-M-YYYY');
+  }
+
+  function weightConverter(valNum) {
+    document.getElementById("weight_oz").value=valNum*0.035274;
+  }
 </script>
 </body>
 </html>

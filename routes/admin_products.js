@@ -51,6 +51,9 @@ router.get("/add-product", isAdmin, function(req, res) {
   var desc = "";
   var price = "";
   var product_code = "";
+  var weight_g = "";
+  var weight_oz = "";
+  var warehouse = "";
 
   Brand.find(function(err, brands) {
     Category.find(function(err, categories) {
@@ -58,11 +61,14 @@ router.get("/add-product", isAdmin, function(req, res) {
         res.render("admin/add_product", {
           name: name,
           desc: desc,
-          brands: brands,
-          categories: categories,
           price: price,
           product_code: product_code,
-          warehouses: warehouses
+          brands: brands,
+          categories: categories,
+          warehouses: warehouses,
+          warehouse: warehouse,
+          weight_g: weight_g,
+          weight_oz: weight_oz
         });
       });
     });
@@ -86,6 +92,8 @@ router.post("/add-product", function(req, res) {
   var category = req.body.category;
   var product_code = req.body.product_code;
   var warehouse = req.body.warehouse;
+  var weight_g = req.body.weight_g;
+  var weight_oz = req.body.weight_oz;
 
   var errors = req.validationErrors();
 
@@ -103,7 +111,9 @@ router.post("/add-product", function(req, res) {
             product_code: product_code,
             categories: categories,
             warehouses: warehouses,
-            warehouse: warehouse
+            warehouse: warehouse,
+            weight_g: weight_g,
+            weight_oz: weight_oz
           });
         });
       });
@@ -123,7 +133,9 @@ router.post("/add-product", function(req, res) {
                 product_code: product_code,
                 categories: categories,
                 warehouses: warehouses,
-                warehouse: warehouse
+                warehouse: warehouse,
+                weight_g: weight_g,
+                weight_oz: weight_oz
               });
             });
           });
@@ -143,7 +155,9 @@ router.post("/add-product", function(req, res) {
           product_code: product_code,
           featured: false,
           category: category,
-          warehouse: warehouse
+          warehouse: warehouse,
+          weight_g: weight_g,
+          weight_oz: weight_oz
         });
 
         product.save(function(err) {
@@ -194,7 +208,9 @@ router.get("/edit-product/:id", isAdmin, function(req, res) {
               category: p.category == "undefined" ? "" : p.category,
               warehouse: p.warehouse == "undefined" ? "" : p.warehouse,
               categories: categories,
-              warehouses: warehouses
+              warehouses: warehouses,
+              weight_g: p.weight_g,
+              weight_oz: p.weight_oz
             });
           }
         });
@@ -225,6 +241,8 @@ router.post("/edit-product/:id", function(req, res) {
   var product_code = req.body.product_code;
   var category = req.body.category;
   var warehouse = req.body.warehouse;
+  var weight_g = req.body.weight_g;
+  var weight_oz = req.body.weight_oz;
 
   var errors = req.validationErrors();
 
@@ -258,6 +276,8 @@ router.post("/edit-product/:id", function(req, res) {
           p.product_code = product_code;
           p.category = category;
           p.warehouse = warehouse;
+          p.weight_g = weight_g;
+          p.weight_oz = weight_oz;
 
           p.save(function(err) {
             var productImage = req.files.image;

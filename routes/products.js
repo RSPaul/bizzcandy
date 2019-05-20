@@ -146,7 +146,7 @@ function searchProduct(searchText, loggedIn, res) {
     //     ],
     //     "phone": "12345678"         
     // })
-    Product.find({"$or": [{ "name": { "$regex": new RegExp(searchText, "i")} }, { "product_code": { "$regex": new RegExp(searchText, "i") }}], instock: true}, (err, products) => { console.log('products ', products);
+    Product.find({"$or": [{ "name": { "$regex": new RegExp(searchText, "i")} }, { "product_code": { "$regex": new RegExp(searchText, "i") }}], instock: true}, (err, products) => { 
         if (err) {
             console.log(err);
         }

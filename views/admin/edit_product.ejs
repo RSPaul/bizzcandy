@@ -61,42 +61,52 @@
         <label for="">Price</label>
         <input type="text" class="form-control" name="price" value="<%= price %>" placeholder="Price">
     </div>
+
+    <div class="form-group">
+        <label for="">Weight (grams)</label>
+        <input type="text" class="form-control" id="weight_g" name="weight_g" value="<%= weight_g %>" placeholder="Weight (grams)" oninput="weightConverter(this.value)" onchange="weightConverter(this.value)">
+    </div>
+
+    <div class="form-group">
+        <label for="">Weight (Ounces)</label>
+        <input type="text" class="form-control" id="weight_oz" name="weight_oz" value="<%= weight_oz %>" placeholder="Weight (Ounces)">
+    </div>
+
+    <div class="form-group">
+        <label for="">Product Code</label>       
+        <input type="text" name="product_code" value="<%= product_code %>" class="form-control">
+    </div>
     
     <div class="form-group">
         <label for="">Current Image</label>
         <p>
             <% if (image == "") { %>
-            <img id="noimage" src="/images/noimage.png" alt="">
+            <img id="noimage" src="/images/noimage.png" alt="" class="form-control">
             <% } else {%>
-            <img id="noimage" src="<%= productImageUrl %>/<%= image %>" alt="">
+            <img id="noimage" src="<%= productImageUrl %>/<%= image %>" alt="" class="form-control">
             <% } %>
         </p>
     </div>
     
     <div class="form-group">
         <label for="">Upload Image</label>
-        <input type="file" class="form-control" name="image" id="img">
+        <input type="file" class="form-control" name="image" id="img" class="form-control">
         <img src="#" id="imgPreview" alt="">
     </div>
     
     <div class="form-group">
         <label for="">In Stock</label>       
-        <input type="checkbox" name="instock" <%if(instock){%> checked <%}%> >
+        <input type="checkbox" name="instock" <%if(instock){%> checked <%}%> class="form-control">
     </div>
 
     <div class="form-group">
         <label for="">Vat Applicable</label>       
-        <input type="checkbox" name="vat" <%if(vat){%> checked <%}%> >
+        <input type="checkbox" name="vat" <%if(vat){%> checked <%}%>  class="form-control">
     </div>
 
     <div class="form-group">
         <label for="">Featured</label>       
-        <input type="checkbox" name="featured" <%if(featured){%> checked <%}%> >
-    </div>
-
-    <div class="form-group">
-        <label for="">Product Code</label>       
-        <input type="text" name="product_code" value=" <%= product_code %>">
+        <input type="checkbox" name="featured" <%if(featured){%> checked <%}%>  class="form-control">
     </div>
 
     <input type="hidden" name="pimage" value="<%= image %>">
