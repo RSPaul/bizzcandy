@@ -8,6 +8,8 @@ const uniqid = require("uniqid");
 const applyDiscount = require("../service/applyDiscount");
 const Product = require("../models/product");
 const Order = require("../models/order");
+var nodemailer = require('nodemailer');
+var email = require('../config/email');
 
 /*
  * GET add product to cart
@@ -160,28 +162,28 @@ router.get("/buynow", function(req, res) {
   )}</b></td></tr></table><p><b><i>All prices exclude tax and tax will be added to the total.</i></b></p><br/><br/> Regards,<br>bizzacandy.com</body></html>`;
 
   delete req.session.cart;
-
-  const ses = new aws.SES();
-  const params = emailParams.getParams(
-    emailParams.fromAddress,
-    user.email,
-    emailParams.carbonCopy,
-    "Thank you for your order",
-    emailBody
-  );
+  order.save();
+  
+  //send email
+  var smtpTransport = nodemailer.createTransport({
+   service: email.SMTP_SERVICE,
+   auth: {
+          user: email.SMTP_USER,
+          pass: email.SMTP_PASS
+      }
+  });
+  var mailOptions = {
+      to: user.email,
+      bcc: emailParams.carbonCopy,
+      from: 'Bizzcandy Support<support@bizzcandy.com>',
+      subject: 'Thank you for your order',
+      html: emailBody
+  };
 
   try {
-    ses.sendEmail(params, function(err, data) {
-      if (err) {
-        console.log(err.message);
-        res.render("admin/admin_error", {
-          error: err
-        });
-      }
+    smtpTransport.sendMail(mailOptions, function(err) {
+        console.log(err);
     });
-
-    console.log("Email sent to: ", user.email);
-    order.save();
   } catch (error) {
     res.status(422).send("Something failed: " + error);
   }
