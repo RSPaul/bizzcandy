@@ -145,12 +145,19 @@ router.post("/add/order", isAdmin, (req, res) => {
                 image: paths.s3ImageUrl + "/" + product.image,
                 vat: product.vat,
                 product_code: orderItem.ProductCode,
+                warehouse: product.warehouse,
                 _id: new ObjectID()
               });
             }
             counter++;
             if(orderItems.length == counter) {
+              var warehouseInitial = '';
+              if(orderArray[0].warehouse === 'jelly-belly') warehouseInitial = 'JB-';
+              else if(orderArray[0].warehouse === 'american-candy') warehouseInitial = 'AC-';
+              else if(orderArray[0].warehouse === 'adult-sweets') warehouseInitial = 'AS-';
+              else if(orderArray[0].warehouse === 'ausnewzealand') warehouseInitial = 'AN-';
               var orderNo = uniqid.time();
+              orderNo = warehouseInitial + orderNo.toUpperCase();
               var order = new Order({
                 orderNo: orderNo,
                 user: user,
