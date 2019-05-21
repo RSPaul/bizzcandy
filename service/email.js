@@ -30,4 +30,4 @@ exports.getParams = function(
 };
 
 exports.fromAddress = "bizzcandy@gmail.com";
-exports.carbonCopy = "randhirsinghpaul@gmail.com";
+exports.carbonCopy = "thiruganesh@gmail.com";
