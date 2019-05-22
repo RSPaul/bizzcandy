@@ -30,7 +30,8 @@
                                     <tr class="CartProduct cartTableHeader">
                                         <td style="width:15%">&nbsp;</td>
                                         <td style="width:40%">Name</td>
-                                        <td style="width:40%">Price</td>
+                                        <td style="width:20%">Code</td>
+                                        <td style="width:20%">Price</td>
                                         <td style="width:20%">Quantity</td>
                                         <td style="width:10%" class="delete">&nbsp;</td>                                        
                                         <td style="width:20%">Subtotal</td>
@@ -48,6 +49,7 @@
                                             </div>
                                         </td>
                                         <td class="product-name"><%= product.title %></td>
+                                        <td class="product-name"><%= product.product_code %></td>
                                         <td class="price">£<%= product.price %></td>
                                         <td class="product-quantity">
                                             <input type="number" class="quantity" value=<%= product.qty %>>
