@@ -29,5 +29,5 @@ exports.getParams = function(
   return params;
 };
 
-exports.fromAddress = "Bizzcandy Support<support@bizzcandy.com>";//"bizzcandy@gmail.com";
-exports.carbonCopy = "randhirsinghpaul@gmail.com";
+exports.fromAddress = "Bizzcandy Support<support@bizzcandy.com>";
+exports.carbonCopy = "thiruganesh@gmail.com";
