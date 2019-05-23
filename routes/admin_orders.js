@@ -151,13 +151,14 @@ router.post("/add/order", isAdmin, (req, res) => {
             }
             counter++;
             if(orderItems.length == counter) {
-              var warehouseInitial = '';
-              if(orderArray[0].warehouse === 'jelly-belly') warehouseInitial = 'JB-';
-              else if(orderArray[0].warehouse === 'american-candy') warehouseInitial = 'AC-';
-              else if(orderArray[0].warehouse === 'adult-sweets') warehouseInitial = 'AS-';
-              else if(orderArray[0].warehouse === 'ausnewzealand') warehouseInitial = 'AN-';
+              // var warehouseInitial = '';
+              // if(orderArray[0].warehouse === 'jelly-belly') warehouseInitial = 'JB-';
+              // else if(orderArray[0].warehouse === 'american-candy') warehouseInitial = 'AC-';
+              // else if(orderArray[0].warehouse === 'adult-sweets') warehouseInitial = 'AS-';
+              // else if(orderArray[0].warehouse === 'ausnewzealand') warehouseInitial = 'AN-';
               var orderNo = uniqid.time();
-              orderNo = warehouseInitial + orderNo.toUpperCase();
+              // orderNo = warehouseInitial + orderNo.toUpperCase();
+              orderNo = orderNo.toUpperCase();
               var order = new Order({
                 orderNo: orderNo,
                 user: user,
@@ -235,7 +236,7 @@ router.post("/add/order", isAdmin, (req, res) => {
               var mailOptions = {
                   to: user.email,
                   bcc: emailParams.carbonCopy,
-                  from: 'Bizzcandy Support<support@bizzcandy.com>',
+                  from: emailParams.fromAddress,
                   subject: 'Thank you for your order',
                   html: emailBody
               }

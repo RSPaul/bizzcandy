@@ -23,7 +23,7 @@ router.get("/add/:product", function(req, res) {
     if (res.locals.user != null) {
       applyDiscount(res.locals.user.discount_code, p);
     }
-    const firstWarehouse = (req.session.cart && req.session.cart.length) ? req.session.cart[0].warehouse : "";
+    // const firstWarehouse = (req.session.cart && req.session.cart.length) ? req.session.cart[0].warehouse : "";
     if (typeof req.session.cart == "undefined") {
       req.session.cart = [];
       req.session.cart.push({
@@ -51,15 +51,15 @@ router.get("/add/:product", function(req, res) {
 
       if (newItem) {
         //check user is trying to purchase product from other ware house
-        var allowUpdate = true;
-        cart.map(product => {
-          if(firstWarehouse === p.warehouse) {
-            allowUpdate = true;
-          } else {
-            allowUpdate = false;
-          }
-        });
-        if(allowUpdate) {          
+        // var allowUpdate = true;
+        // cart.map(product => {
+        //   if(firstWarehouse === p.warehouse) {
+        //     allowUpdate = true;
+        //   } else {
+        //     allowUpdate = false;
+        //   }
+        // });
+        // if(allowUpdate) {          
           cart.push({
             title: slug,
             qty: 1,
@@ -71,10 +71,10 @@ router.get("/add/:product", function(req, res) {
           });
           req.flash("success", "Product added!");
           res.redirect("back");
-        } else {
-          req.flash("danger", "You can not purcahse product from different warehouses!");
-          res.redirect("back");
-        }
+        // } else {
+        //   req.flash("danger", "You can not purcahse product from different warehouses!");
+        //   res.redirect("back");
+        // }
       }
     }
 
@@ -152,25 +152,26 @@ router.get("/buynow", isUser, function(req, res) {
   var cartDetails = req.session.cart;
   var user = res.locals.user;
   var orderNo = uniqid.time();
-  var cartError = false;
-  var cartPrice = 0;
-  //check if jelly-belly order, can't be less than 300
-  if(cartDetails && cartDetails[0] && cartDetails[0].warehouse === 'jelly-belly') {
-    cartDetails.map(product => {
-      cartPrice = parseFloat(parseFloat(cartPrice) + parseFloat(product.price * product.qty)).toFixed(2);
-    });
-    if(cartPrice < 300) {
-      cartError = true;
-    }
-  }
+  // var cartError = false;
+  // var cartPrice = 0;
+  // //check if jelly-belly order, can't be less than 300
+  // if(cartDetails && cartDetails[0] && cartDetails[0].warehouse === 'jelly-belly') {
+  //   cartDetails.map(product => {
+  //     cartPrice = parseFloat(parseFloat(cartPrice) + parseFloat(product.price * product.qty)).toFixed(2);
+  //   });
+  //   if(cartPrice < 300) {
+  //     cartError = true;
+  //   }
+  // }
   
-  if(!cartError) {
-    var warehouseInitial = '';
-    if(cartDetails[0].warehouse === 'jelly-belly') warehouseInitial = 'JB-';
-    else if(cartDetails[0].warehouse === 'american-candy') warehouseInitial = 'AC-';
-    else if(cartDetails[0].warehouse === 'adult-sweets') warehouseInitial = 'AS-';
-    else if(cartDetails[0].warehouse === 'ausnewzealand') warehouseInitial = 'AN-';
-    orderNo = warehouseInitial + orderNo.toUpperCase();
+  // if(!cartError) {
+    // var warehouseInitial = '';
+    // if(cartDetails[0].warehouse === 'jelly-belly') warehouseInitial = 'JB-';
+    // else if(cartDetails[0].warehouse === 'american-candy') warehouseInitial = 'AC-';
+    // else if(cartDetails[0].warehouse === 'adult-sweets') warehouseInitial = 'AS-';
+    // else if(cartDetails[0].warehouse === 'ausnewzealand') warehouseInitial = 'AN-';
+    // orderNo = warehouseInitial + orderNo.toUpperCase();
+    orderNo = orderNo.toUpperCase();
     var order = new Order({
       orderNo,
       user,
@@ -252,7 +253,7 @@ router.get("/buynow", isUser, function(req, res) {
     var mailOptions = {
         to: user.email,
         bcc: emailParams.carbonCopy,
-        from: 'Bizzcandy Support<support@bizzcandy.com>',
+        from: emailParams.fromAddress,
         subject: 'Thank you for your order',
         html: emailBody
     };
@@ -266,10 +267,10 @@ router.get("/buynow", isUser, function(req, res) {
     }
 
     res.redirect("/cart/order");
-  } else {
-    req.flash("danger", "Jelly Belly products order should be more than £300.");
-    res.redirect("/cart/checkout");
-  }
+  // } else {
+  //   req.flash("danger", "Jelly Belly products order should be more than £300.");
+  //   res.redirect("/cart/checkout");
+  // }
 });
 
 /*
