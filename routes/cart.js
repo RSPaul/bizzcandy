@@ -69,15 +69,16 @@ router.get("/add/:product", function(req, res) {
             product_code: p.product_code,
             warehouse: p.warehouse
           });
-          req.flash("success", "Product added!");
-          res.redirect("back");
+          // req.flash("success", "Product added!");
+          // res.redirect("back");
         // } else {
         //   req.flash("danger", "You can not purcahse product from different warehouses!");
         //   res.redirect("back");
         // }
       }
+      req.flash("success", "Product added!");
+      res.redirect("back");
     }
-
     //console.log(req.session.cart);
   });
 });

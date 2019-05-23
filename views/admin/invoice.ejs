@@ -18,7 +18,7 @@
             <h2 class="block-title-2 text-left">Invoice Details</h2>
           </div>
 
-          <div class="col-sm-6 col-md-6" style="height: 210px;">
+          <div class="col-lg-6 col-sm-6 col-xs-6 col-md-6" style="height: 210px;">
             <table class="w100">
               <tr>
                 <td>
@@ -53,7 +53,8 @@
 
             <!-- <hr class="invHr" /> -->
           </div>
-          <div class="col-sm-6 col-md-6" style="height: 150px;">
+          <!-- col-lg-12 col-sm-12 col-xs-12 col-md-12 clearfix -->
+          <div class="col-lg-6 col-sm-6 col-xs-6 col-md-6" style="height: 150px;">
             <div class="order-box">
               <div class="order-box-header">
                 Sold To:
@@ -80,71 +81,9 @@
             </div>
           </div>
 
-          <!-- <div class="col-sm-12" style="height:40px;">
-            <table class="w100">
-              <tr>
-                <td>
-                  <div class="invInfo text-left">
-                    <h3>
-                      <span
-                        ><strong>Invoice Ref:&nbsp;</strong><%=order.orderNo %> </span
-                      >&nbsp;&nbsp;
-                      <span><%=order.date.toDateString() %></span>
-                    </h3>
-                  </div>
-                </td>
-              </tr>
-            </table>
-
-            <hr class="invHr" />
-          </div> -->
-          <!-- <div class="col-lg-6 col-sm-6 col-xs-12 col-md-6">
-            <div class="order-box">
-              <div class="order-box-header">
-                Sold To:
-              </div>
-
-              <div class="order-box-content">
-                <div class="address">
-                  <p>
-                    <strong><%=order.user.name%></strong>
-                  </p>
-                  <p><%=order.user.address_line1%></p>
-                  <p><%=order.user.city%></p>
-                  <p><%=order.user.county%></p>
-                  <p><%=order.user.postcode%></p>
-                  <p><%=order.user.telephone%> </p>
-                  <p><%=order.user.email%></p>
-                </div>
-              </div>
-            </div>
-          </div> -->
-
-          <!-- <div class="col-lg-6 col-sm-6 col-xs-12 col-md-6">
-            <div class="order-box"> -->
-              <!-- <div class="order-box-header">
-                Other Details:
-              </div> -->
-
-             <!--  <div class="order-box-content">
-                <div class="address">
-                  <p>
-                    Invoice Ref:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><%=order.orderNo %></strong>
-                  </p>
-                  <p>
-                    Invoice Date:&nbsp;&nbsp;&nbsp;&nbsp;<strong><%=order.date.toDateString() %></strong>
-                  </p>
-                  <p>
-                    VAT No:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>242217538</strong>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div> -->
-
           <div style="clear: both"></div>
 
-          <div class="col-lg-12 col-sm-12 col-xs-12 col-md-12 clearfix">
+          <div class="col-lg-12 col-sm-12 col-xs-12 col-md-12 clearfix" id="orderTable">
             <div class="order-box invTable">
               <div class="order-box-header">
                 Order Details
@@ -334,6 +273,9 @@
 
 <script>
   function printInvoice(divName){
+    
+    $('#orderTable').addClass('col-lg-13 col-sm-13 col-xs-13 col-md-13 clearfix').removeClass('col-lg-12 col-sm-12 col-xs-12 col-md-12 clearfix');
+
     var printContents = document.getElementById(divName).innerHTML;
     var originalContents = document.body.innerHTML;
     document.body.innerHTML = printContents;
