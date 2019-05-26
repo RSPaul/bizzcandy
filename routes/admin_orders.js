@@ -29,7 +29,7 @@ router.get("/", isAdmin, (req, res) => {
 router.get("/:id", isAdmin, (req, res) => {
   Order.findById(req.params.id, (err, order) => {
     if (err) console.log(err);              
-    //check if invoice listing exists, redirect to manage invoices page
+      //check if invoice listing exists, redirect to manage invoices page
       Invoice.find({orderNo: order.orderNo})
         .exec((err, invoices) => {
           if (err) console.log(err);
@@ -157,7 +157,8 @@ router.get("/invoice/:orderId", isAdmin, (req, res) => {
         order,
         subTotal,
         vat,
-        total: vat + subTotal
+        total: vat + subTotal,
+        orderDetails: null
       });
     });
 });
@@ -327,11 +328,15 @@ router.get("/single_invoice/:invoiceId", isAdmin, (req, res) => {
           subTotal += item.qty * item.price;
         });
         vat = subTotal * 0.2;
-        res.render("admin/invoice", {
-          order,
-          subTotal,
-          vat,
-          total: vat + subTotal
+        //find order details
+        Order.findOne({orderNo: order.orderNo}, (err, orderDetails) => {
+          res.render("admin/invoice", {
+            order,
+            subTotal,
+            vat,
+            total: vat + subTotal,
+            orderDetails: orderDetails
+          });
         });
       });
 });

@@ -330,7 +330,11 @@
             </a>
           </li>
           <li class="next pull-left">
-            <a href="/admin/orders/<%=order._id%>"> ← Back to Order</a>
+            <% if(orderDetails && orderDetails._id) { %>
+              <a href="/admin/orders/<%=orderDetails._id%>"> ← Back to Order</a>
+            <% } else { %>
+              <a href="/admin/orders/<%=order._id%>"> ← Back to Order</a>
+            <% } %>
           </li>
         </ul>
       </div>
