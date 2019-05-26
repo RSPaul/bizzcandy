@@ -218,7 +218,7 @@ h3 code {
 
 .block-title-2 {
     border-bottom: 1px solid #CECECE;
-    font-size: 13px;
+    font-size: 16px;
     font-weight: bold;
     margin: 0 0 15px;
     padding: 10px 0 0;
@@ -6528,4 +6528,17 @@ div.quickview {
 }
 p.weight {
     margin: 0;
+}
+td.product-name.warehouse {
+    text-transform: capitalize;
+}
+table.cartTable.table-responsive.text-right {
+    float: right;
+}
+.text-upper {
+    text-transform: uppercase;
+}
+.col-lg-6.col-sm-6.col-md-6.no-right-padding {
+    padding-left: 0;
+    padding-right: 0;
 }

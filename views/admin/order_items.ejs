@@ -1,7 +1,11 @@
 <%- include('../_layouts/adminheader') %>
 
 <h2 class="page-title">Order items</h2>
+<% if(back) {%>
+<a href="javascript:history.back()" class="btn btn-primary">Back to all invoices</a>
+<% } else {%>
 <a href="/admin/orders" class="btn btn-primary">Back to all orders</a>
+<% } %>
 <a href="/admin/orders/invoice/<%=order._id%>" class="btn btn-primary"
   >Invoice</a
 >
@@ -22,7 +26,7 @@
           <td style="width:10%">Prodcut Code</td>
           <td style="width:10%">Quantity</td>
           <td style="width:10%">Vat</td>
-          <td style="width:30%">Image</td>
+          <td style="width:25%">Image</td>
           <td style="width:20%">Edit</td>
           <td style="width:20%">Delete</td>
         </tr>
@@ -44,16 +48,20 @@
             </div>
           </td>
           <td>
-            <a href="/admin/orders/edit/<%=order._id%>/item/<%= item._id %>"
-              >Edit</a
-            >
+            <% if(orderDetails) { %>
+              <a href="/admin/orders/edit/<%=orderDetails._id%>/item/<%= item._id %>"
+              >Edit</a>
+            <% } else { %>
+              <a href="/admin/orders/edit/<%=order._id%>/item/<%= item._id %>"
+              >Edit</a>
+            <% } %>
           </td>
           <td>
-            <a
-              class="confirmDeletion"
-              href="/admin/orders/delete/<%=order._id%>/item/<%= item._id %>"
-              >Delete</a
-            >
+            <% if(orderDetails) { %>
+              <a class="confirmDeletion" href="/admin/orders/delete/<%=orderDetails._id%>/item/<%= item._id %>">Delete</a>
+            <% } else { %>
+              <a class="confirmDeletion" href="/admin/orders/delete/<%=order._id%>/item/<%= item._id %>">Delete</a>
+            <% } %>
           </td>
         </tr>
         <% }); %>

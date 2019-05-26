@@ -11,6 +11,7 @@ var email = require('../config/email');
 const emailParams = require("../service/email");
 
 const Order = require("../models/order");
+const Invoice = require("../models/invoice");
 const User = require("../models/user");
 const Product = require("../models/product");
 
@@ -27,10 +28,24 @@ router.get("/", isAdmin, (req, res) => {
 
 router.get("/:id", isAdmin, (req, res) => {
   Order.findById(req.params.id, (err, order) => {
-    if (err) console.log(err);
-    res.render("admin/order_items", {
-      order
-    });
+    if (err) console.log(err);              
+    //check if invoice listing exists, redirect to manage invoices page
+      Invoice.find({orderNo: order.orderNo})
+        .exec((err, invoices) => {
+          if (err) console.log(err);
+            if(invoices.length) {
+              res.render("admin/invoices_list", {
+                invoices,
+                order
+              });
+            } else {
+              res.render("admin/order_items", {
+                order,
+                back: false,
+                orderDetails: order
+              });
+            }
+      });
   }).populate("user", "name");
 });
 
@@ -57,11 +72,24 @@ router.get("/edit/:orderId/item/:itemId", isAdmin, (req, res) => {
   Order.findById(req.params.orderId, (err, order) => {
     if (err) console.log(err);
 
-    const item = order.items.id(req.params.itemId);
-    res.render("admin/edit_order_item", {
-      order,
-      item
-    });
+    if(order && order.items && order.items.length) {
+        console.log('render from here ', order);
+        const item = order.items.id(req.params.itemId);
+        res.render("admin/edit_order_item", {
+          order,
+          item,
+          orderDetails: order
+        });
+    } else {
+      Invoice.findOne({orderNo: order.orderNo}, (err, order2) => {
+        const item = order2.items.id(req.params.itemId);
+        res.render("admin/edit_order_item", {
+          order:order2,
+          item,
+          orderDetails: order
+        });
+      });       
+    }
   });
 });
 
@@ -69,14 +97,24 @@ router.post("/edit/:orderId/item/:itemId", isAdmin, (req, res) => {
   const { price, qty, vat } = req.body;
 
   Order.findById(req.params.orderId, (err, order) => {
+    console.log('order is ', order);
     if (err) console.log(err);
-
-    const item = order.items.id(req.params.itemId);
-    item.price = price;
-    item.qty = qty;
-    item.vat = vat == "on" ? true : false;
-
-    order.save();
+    //check if it is invoice
+    if(order && order.items && order.items.length) {
+      const item = order.items.id(req.params.itemId);
+      item.price = price;
+      item.qty = qty;
+      item.vat = vat == "on" ? true : false;
+      order.save();      
+    } else {
+      Invoice.findOne({orderNo: order.orderNo}, (err, order) => {
+        const item = order.items.id(req.params.itemId);
+        item.price = price;
+        item.qty = qty;
+        item.vat = vat == "on" ? true : false;
+        order.save();
+      });
+    }
 
     req.flash("success", "order item updated!");
     res.redirect("/admin/orders/" + req.params.orderId);
@@ -86,10 +124,18 @@ router.post("/edit/:orderId/item/:itemId", isAdmin, (req, res) => {
 router.get("/delete/:orderId/item/:itemId", isAdmin, (req, res) => {
   Order.findById(req.params.orderId, (err, order) => {
     if (err) console.log(err);
-
-    const item = order.items.id(req.params.itemId);
-    item.remove();
-    order.save();
+    if(order && order.items && order.items.length) {      
+      const item = order.items.id(req.params.itemId);
+      item.remove();
+      order.save();
+    } else {
+      //remove from invoice colllection
+      Invoice.findOne({orderNo: order.orderNo}, (err, order) => {
+        const item = order.items.id(req.params.itemId);
+        item.remove();
+        order.save();
+      });
+    }
 
     req.flash("success", "Item deleted");
     res.redirect("/admin/orders/" + req.params.orderId);
@@ -254,6 +300,40 @@ router.post("/add/order", isAdmin, (req, res) => {
       }
     });
   });
+});
+
+router.get("/invoice_items/:invoiceId", isAdmin, (req, res) => {
+    Invoice.findById(req.params.invoiceId, (err, invoice) => {
+        if (err) console.log(err);
+          //send along order details
+          Order.findOne({orderNo: invoice.orderNo}, (err, orderDetails) => {
+              res.render("admin/order_items", {
+                order: invoice,
+                back: true,
+                orderDetails: orderDetails
+              });
+          });
+    }).populate("user", "name");
+});
+
+router.get("/single_invoice/:invoiceId", isAdmin, (req, res) => {
+    let subTotal = 0;
+    let vat = 0;
+    Invoice.findById(req.params.invoiceId)
+      .populate("user")
+      .exec((err, order) => {
+        if (err) console.log(err);
+        order.items.map(item => {
+          subTotal += item.qty * item.price;
+        });
+        vat = subTotal * 0.2;
+        res.render("admin/invoice", {
+          order,
+          subTotal,
+          vat,
+          total: vat + subTotal
+        });
+      });
 });
 
 function getProductByCode(productCode, callback) {

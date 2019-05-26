@@ -1,0 +1,47 @@
+<%- include('../_layouts/adminheader') %>
+
+<h2 class="page-title">Invoice List</h2>
+<a href="/admin/orders" class="btn btn-primary">Back to all orders</a>
+<!-- <a href="/admin/orders/invoice/<%=order._id%>" class="btn btn-primary"
+  >Invoice</a
+> -->
+<div class="admin-search">
+  Order Ref: <%=order.orderNo%><br />User: <%=order.user.name%>
+</div>
+<br /><br />
+
+<% if (invoices) { %>
+
+<div class="col-xs-12 col-sm-12">
+  <div class="cartContent w100">
+    <table class="cartTable table-responsive" style="width: 100%">
+      <tbody>
+        <tr class="CartProduct cartTableHeader">
+          <td style="width:10%">S.No</td>
+          <td style="width:20%">Order No</td>
+          <td style="width:20%">Invoice No</td>
+          <td style="width:20%">User</td>
+          <td style="width:10%">View Items</td>
+          <td style="width:10%">View Invoice</td>
+        </tr>
+
+        <% sNo = 1 %>
+        <% invoices.forEach(invoice => { %>
+        <tr class="CartProduct">
+          <td><%= sNo %></td>
+          <td><%= invoice.orderNo %></td>
+          <td><%= invoice.invoiceNo.toUpperCase() %></td>
+          <td><%=order.user.name%></td>
+          <td><a href="/admin/orders/invoice_items/<%= invoice._id %>">Items</a></td>
+          <td><a href="/admin/orders/single_invoice/<%= invoice._id %>">Invoice</a></td>
+        </tr>
+        <% sNo++; }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!--Content-->
+
+<% } else {%>
+<h3 class="text-center">There are no invoices.</h3>
+<% }%> <%- include('../_layouts/adminfooter') %>

@@ -24,12 +24,15 @@
                 <div class="row userInfo">
                     <div class="col-xs-12 col-sm-12">
                         <div class="cartContent w100">
+                         <% var total = 0; %>
+                            <% cart.forEach(function(products){ %>
                             <table class="cartTable table-responsive">
                                 <tbody>
 
                                     <tr class="CartProduct cartTableHeader">
                                         <td style="width:15%">&nbsp;</td>
                                         <td style="width:40%">Name</td>
+                                        <td style="width:40%">Warehouse</td>
                                         <td style="width:20%">Code</td>
                                         <td style="width:20%">Price</td>
                                         <td style="width:20%">Quantity</td>
@@ -37,31 +40,51 @@
                                         <td style="width:20%">Subtotal</td>
                                     </tr>
 
-                                    <% var total = 0; %>
-                                    <% cart.forEach(function(product){ %>
-                                    <% var sub = parseFloat(product.qty * product.price).toFixed(2) %>
-                                    <% total += +sub %>
-                                                                            
-                                    <tr class="CartProduct">
-                                        <td class="CartProductThumb">
-                                            <div>                                                
-                                                <img class="cpi" src="<%= product.image %>" alt="img">                                               
-                                            </div>
-                                        </td>
-                                        <td class="product-name"><%= product.title %></td>
-                                        <td class="product-name"><%= product.product_code %></td>
-                                        <td class="price">£<%= product.price %></td>
-                                        <td class="product-quantity">
-                                            <input type="number" class="quantity" value=<%= product.qty %>>
-                                        </td>                                        
-                                        <td class="delete">
-                                            <a href="/cart/update/<%= product.title %>?action=clear">
-                                                <i class="glyphicon glyphicon-trash fa-2x"></i>
-                                            </a>
-                                        </td>
-                                        <td class="price">£<%= sub %></td>
+                                    <%# var total = 0; %>
+                                    <%# cart.forEach(function(products){ %>
+                                        <% products.items.forEach(function(product){ %>
+                                        <% var sub = parseFloat(product.qty * product.price).toFixed(2) %>
+                                        <% total += +sub %>
+                                                                                
+                                        <tr class="CartProduct">
+                                            <td class="CartProductThumb">
+                                                <div>                                                
+                                                    <img class="cpi" src="<%= product.image %>" alt="img">                                               
+                                                </div>
+                                            </td>
+                                            <td class="product-name product-slug"><%= product.title %></td>
+                                            <td class="product-name warehouse"><%= products.warehouse %></td>
+                                            <td class="product-name"><%= product.product_code %></td>
+                                            <td class="price">£<%= product.price %></td>
+                                            <td class="product-quantity">
+                                                <input type="number" class="quantity" value="<%= product.qty %>" min="0">
+                                            </td>                                        
+                                            <td class="delete">
+                                                <a href="/cart/update/<%= product.title %>?action=clear">
+                                                    <i class="glyphicon glyphicon-trash fa-2x"></i>
+                                                </a>
+                                            </td>
+                                            <td class="price">£<%= sub %></td>
+                                        </tr>
+                                        <% }); %>
+                                    <%# }); %>
+                                    <!-- <tr>
+                                        <td colspan="6" align="right"  class="price"><b>Total: </b> £<%= parseFloat(total).toFixed(2) %></td>
                                     </tr>
-                                    <% }); %>
+                                    <tr>
+                                        <td class="checkout-clear-buy-buttons" colspan="3" align="right">
+                                            <a class="clearcart btn btn-danger" href="/cart/clear">Clear cart</a>
+                                        </td>
+                                        <td class="checkout-clear-buy-buttons" colspan="3" align="right">
+                                            <a class="btn btn-primary buynow" href="/cart/buynow">Buy now</a>
+                                        </td>
+                                    </tr> -->
+                                   
+                                </tbody>
+                            </table>
+                            <% }); %>
+                            <table class="cartTable table-responsive text-right">
+                                <tbody>
                                     <tr>
                                         <td colspan="6" align="right"  class="price"><b>Total: </b> £<%= parseFloat(total).toFixed(2) %></td>
                                     </tr>
@@ -73,7 +96,6 @@
                                             <a class="btn btn-primary buynow" href="/cart/buynow">Buy now</a>
                                         </td>
                                     </tr>
-                                   
                                 </tbody>
                             </table>
                         </div>
@@ -110,10 +132,9 @@
 
         function updateQunatity(quantityInput) {
             var productRow = $(quantityInput).parent().parent();
-            var productTitle = productRow.children('.product-name').text();
+            var productTitle = productRow.children('.product-slug').text();
             var productQuantity = quantityInput.value;
             var redirectUrl = '/cart/update/' + productTitle + '?action=update&qty=' + productQuantity;
-
             window.location.href = redirectUrl;
         }
 

@@ -1,11 +1,13 @@
 <%- include('../_layouts/adminheader') %>
 
 <h2 class="page-title">Edit a Order Item</h2>
-<a href="/admin/orders/<%= order.id %>" class="btn btn-primary">Back to order</a>
+<a href="javascript:history.back()" class="btn btn-primary">Back to order</a>
 <br><br>
-
-<form method="post" action="/admin/orders/edit/<%= order.id %>/item/<%= item.id %>">
-    
+<% if(orderDetails) { %>
+<form method="post" action="/admin/orders/edit/<%= orderDetails._id %>/item/<%= item.id %>">
+<% } else { %>
+<form method="post" action="/admin/orders/edit/<%= order._id %>/item/<%= item.id %>">
+<% } %>
     <div class="form-group">
         <label for="">Item</label>
         <input type="text" class="form-control" name="title" value="<%= item.title %>" placeholder="Item">
