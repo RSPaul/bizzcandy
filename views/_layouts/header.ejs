@@ -79,7 +79,13 @@
                 <i class="fa fa-shopping-cart colorWhite"> </i> <span
                     class="cartRespons colorWhite">Cart (
                         <% if (typeof cart !== "undefined") { %>
-                        <%= cart.length %>
+                            <% cartCount = 0 %>
+                            <% cart.forEach(function(products){ %>
+                                <% products.items.forEach(function(product){ %>
+                                <% cartCount++; %>
+                                <% }); %>    
+                            <% }); %>
+                            <%= cartCount; %>
                         <% } else {%>
                         0
                         <% } %>
@@ -125,11 +131,17 @@
             <div class="nav navbar-nav navbar-right hidden-xs">
                 <div class="dropdown  cartMenu "><a href="/cart/checkout" class="dropdown-toggle"> <i
                         class="fa fa-shopping-cart"> </i> <span class="cartRespons"> Cart (
-                            <% if (typeof cart !== "undefined") { %>
-                            <%= cart.length %>
-                            <% } else {%>
-                            0
-                            <% } %>
+                        <% if (typeof cart !== "undefined") { %>
+                            <% cartCount = 0 %>
+                            <% cart.forEach(function(products){ %>
+                                <% products.items.forEach(function(product){ %>
+                                <% cartCount++; %>
+                                <% }); %>    
+                            <% }); %>
+                            <%= cartCount; %>
+                        <% } else {%>
+                        0
+                        <% } %>
                         ) </span> <b class="caret"> </b> </a>                    
                 </div>
                 <!--/.cartMenu-->
