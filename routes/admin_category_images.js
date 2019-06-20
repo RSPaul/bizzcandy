@@ -77,8 +77,6 @@ router.post('/add', isAdmin, (req, res) => {
 
                     if(imageFile) {
                         const category_image = req.files.image;
-                        console.log('\n keys =============> \n', keys);
-                        console.log('\n bucket =============> \n', s3Bucket);
                         addAndRemoveImage(s3Bucket, 'add', imageFile, category_image);
                     }
                     req.flash('success', 'Category image added');  
