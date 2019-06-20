@@ -1,6 +1,6 @@
 module.exports = {
-  accessKeyId: 'AKIAREFGSWJGTGFULNVI',
-  secretAccessKey: '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',
+  accessKeyId: process.env.accessKeyId,
+  secretAccessKey: process.env.secretAccessKey,
   region: "eu-west-2"
 };
 // Access Key ID: AKIAJHCENNU57HYAAPGA
