@@ -2,7 +2,7 @@ const keys = require('./keys');
 const AWS = require('aws-sdk');
 
 module.exports = function(bucket){
-
+	console.log('\n keys =============> \n', keys);
     AWS.config.accessKeyId = keys.accessKeyId;
     AWS.config.secretAccessKey = keys.secretAccessKey;
     AWS.config.region = keys.region;
