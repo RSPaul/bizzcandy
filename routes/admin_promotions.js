@@ -5,7 +5,7 @@ const paths = require('../config/paths');
 const isAdmin = auth.isAdmin;
 const bucket = require('../config/s3Bucket');
 const addAndRemoveImage = require('../service/addRemoveS3Image');
-const s3Bucket = bucket('promotions-images');
+const s3Bucket = bucket('promotions-images-new');
 const Promotion = require('../models/promotion');
 
 router.get('/', isAdmin, (req, res) => {

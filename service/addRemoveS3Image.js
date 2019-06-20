@@ -1,8 +1,7 @@
 module.exports = function(s3Bucket, type, imageKey, productImage) {
     if(type === 'add') {
-        var data = { Key: imageKey, ContentType: 'image', Body: productImage.data };
+        var data = { Key: imageKey, ContentType: 'image', Body: productImage.data, ACL: 'public-read' };
         s3Bucket.putObject(data, function (err, result) {
-            console.log('put image here ', err, result, imageKey);
             if (err) return console.log('Error uploading data: ', data);           
         });
 

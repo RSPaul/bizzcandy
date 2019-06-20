@@ -7,7 +7,7 @@ const bucket = require('../config/s3Bucket');
 const addAndRemoveImage = require('../service/addRemoveS3Image');
 
 
-const s3Bucket = bucket('home-brand-images');
+const s3Bucket = bucket('home-brand-images-new');
 
 // Get CategoryImage model
 const BrandImage = require('../models/brand_image');
