@@ -4,7 +4,7 @@ dev.js
 .eslintrc
 .vscode
 config/database.js
-#config/prod.js
+config/prod.js
 config/dev.js
 orders/
 config/email.js
