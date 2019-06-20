@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../config/auth');
 const paths = require('../config/paths');
+const keys = require('../config/keys');
 const isAdmin = auth.isAdmin;
 const bucket = require('../config/s3Bucket');
 const addAndRemoveImage = require('../service/addRemoveS3Image');
@@ -76,6 +77,7 @@ router.post('/add', isAdmin, (req, res) => {
 
                     if(imageFile) {
                         const category_image = req.files.image;
+                        console.log('\n keys =============> \n', keys);
                         addAndRemoveImage(s3Bucket, 'add', imageFile, category_image);
                     }
                     req.flash('success', 'Category image added');  
