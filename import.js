@@ -114,8 +114,49 @@ function updateCode(product, callback) {
   });
 }
 
+
+//import new products
+app.get('/import_products', function(req, res) {
+   const jsonFilePath=path.resolve(__dirname, 'orders/new-products.json');
+      var jsonObj = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
+      // console.log('jsonObj ', jsonObj.ADULT);
+          jsonObj.ADULT.map(product => {
+            // console.log('\n ==> ', product);
+            //insert prodcut
+            var newProduct = new Product({
+              name: product.Description,
+              slug: product.Description.replace(/\s+/g, '-').toLowerCase(),
+              desc: product.Description,
+              brand: "adult-sweets",
+              category: "adult-sweets",
+              price: parseFloat(product.Price),
+              image: product.Code + '.png',
+              instock: true,
+              vat: false,
+              product_code: product.Code,
+              featured: false,
+              warehouse: "adult-sweets",
+              weight_g: '',
+              weight_oz: ''
+            });
+            console.log('\n save it ==> ', newProduct , ' price ==> ', product.Price);
+            newProduct.save();
+          });
+
+    res.send('done');
+});
+
+// var addAndRemoveImage = require("./service/addRemoveS3Image");
+// var s3Bucket = bucket("sweet-product-images-new");
+
+app.get('/upload_images', function(req, res) {
+  // var productImage = req.files.image;
+  // var imageFile = 
+  // addAndRemoveImage(s3Bucket, "add", imageFile, productImage);
+});
+
 // Start the server
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 9000;
 app.listen(port, function () {
     console.log(`Server started on port ${port}`);
 });
