@@ -149,17 +149,28 @@ router.get("/invoice/:orderId", isAdmin, (req, res) => {
     .populate("user")
     .exec((err, order) => {
       if (err) console.log(err);
-      order.items.map(item => {
-        subTotal += item.qty * item.price;
-      });
-      vat = subTotal * 0.2;
-      res.render("admin/invoice", {
-        order,
-        subTotal,
-        vat,
-        total: vat + subTotal,
-        orderDetails: null
-      });
+      if(order) {        
+        order.items.map(item => {
+          subTotal += item.qty * item.price;
+        });
+        vat = subTotal * 0.2;
+        res.render("admin/invoice", {
+          order,
+          subTotal,
+          vat,
+          total: vat + subTotal,
+          orderDetails: null
+        });
+      } else {
+        vat = subTotal * 0.2;
+        res.render("admin/invoice", {
+          order,
+          subTotal,
+          vat,
+          total: vat + subTotal,
+          orderDetails: null
+        });
+      }
     });
 });
 
