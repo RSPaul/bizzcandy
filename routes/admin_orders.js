@@ -30,22 +30,33 @@ router.get("/:id", isAdmin, (req, res) => {
   Order.findById(req.params.id, (err, order) => {
     if (err) console.log(err);              
       //check if invoice listing exists, redirect to manage invoices page
-      Invoice.find({orderNo: order.orderNo})
-        .exec((err, invoices) => {
-          if (err) console.log(err);
-            if(invoices.length) {
-              res.render("admin/invoices_list", {
-                invoices,
-                order
-              });
-            } else {
-              res.render("admin/order_items", {
-                order,
-                back: false,
-                orderDetails: order
-              });
-            }
-      });
+      if(order && order != null) {
+        Invoice.find({orderNo: order.orderNo})
+          .exec((err, invoices) => {
+            if (err) console.log(err);
+              if(invoices.length) {
+                res.render("admin/invoices_list", {
+                  invoices,
+                  order
+                });
+              } else {
+                res.render("admin/order_items", {
+                  order,
+                  back: false,
+                  orderDetails: order
+                });
+              }
+        });        
+
+      } else {
+        Invoice.findById(req.params.id, (err, order) => {
+          res.render("admin/order_items", {
+            order,
+            back: false,
+            orderDetails: order
+          });
+        }).populate("user", "name");
+      }
   }).populate("user", "name");
 });
 
@@ -81,14 +92,25 @@ router.get("/edit/:orderId/item/:itemId", isAdmin, (req, res) => {
           orderDetails: order
         });
     } else {
-      Invoice.findOne({orderNo: order.orderNo}, (err, order2) => {
-        const item = order2.items.id(req.params.itemId);
-        res.render("admin/edit_order_item", {
-          order:order2,
-          item,
-          orderDetails: order
+      if(order && order != null) {
+        Invoice.findOne({orderNo: order.orderNo}, (err, order2) => {
+          const item = order2.items.id(req.params.itemId);
+          res.render("admin/edit_order_item", {
+            order:order2,
+            item,
+            orderDetails: order
+          });
+        });       
+      } else {
+        Invoice.findById(req.params.orderId, (err, order2) => {
+          const item = order2.items.id(req.params.itemId);
+          res.render("admin/edit_order_item", {
+            order:order2,
+            item,
+            orderDetails: order
+          });
         });
-      });       
+      }
     }
   });
 });
@@ -107,13 +129,23 @@ router.post("/edit/:orderId/item/:itemId", isAdmin, (req, res) => {
       item.vat = vat == "on" ? true : false;
       order.save();      
     } else {
-      Invoice.findOne({orderNo: order.orderNo}, (err, order) => {
-        const item = order.items.id(req.params.itemId);
-        item.price = price;
-        item.qty = qty;
-        item.vat = vat == "on" ? true : false;
-        order.save();
-      });
+      if(order && order.orderNo) {        
+        Invoice.findOne({orderNo: order.orderNo}, (err, order) => {
+          const item = order.items.id(req.params.itemId);
+          item.price = price;
+          item.qty = qty;
+          item.vat = vat == "on" ? true : false;
+          order.save();
+        });
+      } else {
+        Invoice.findById(req.params.orderId, (err, order) => {
+          const item = order.items.id(req.params.itemId);
+          item.price = price;
+          item.qty = qty;
+          item.vat = vat == "on" ? true : false;
+          order.save();
+        });
+      }
     }
 
     req.flash("success", "order item updated!");
@@ -130,11 +162,19 @@ router.get("/delete/:orderId/item/:itemId", isAdmin, (req, res) => {
       order.save();
     } else {
       //remove from invoice colllection
-      Invoice.findOne({orderNo: order.orderNo}, (err, order) => {
-        const item = order.items.id(req.params.itemId);
-        item.remove();
-        order.save();
-      });
+      if(order && order.orderNo) {
+        Invoice.findOne({orderNo: order.orderNo}, (err, order) => {
+          const item = order.items.id(req.params.itemId);
+          item.remove();
+          order.save();
+        });
+      } else {
+        Invoice.findById(req.params.orderId, (err, order) => {
+          const item = order.items.id(req.params.itemId);
+          item.remove();
+          order.save();
+        });
+      }
     }
 
     req.flash("success", "Item deleted");
@@ -162,13 +202,18 @@ router.get("/invoice/:orderId", isAdmin, (req, res) => {
           orderDetails: null
         });
       } else {
-        vat = subTotal * 0.2;
-        res.render("admin/invoice", {
-          order,
-          subTotal,
-          vat,
-          total: vat + subTotal,
-          orderDetails: null
+        Invoice.findById(req.params.orderId, (err, order) => {
+          order.items.map(item => {
+            subTotal += item.qty * item.price;
+          });
+          vat = subTotal * 0.2;
+          res.render("admin/invoice", {
+            order,
+            subTotal,
+            vat,
+            total: vat + subTotal,
+            orderDetails: null
+          });
         });
       }
     });
