@@ -4,11 +4,27 @@
 <a href="/admin/warehouses" class="btn btn-primary">Back to all warehouse</a>
 <br><br>
 
-<form method="post" action="/admin/warehouses/edit-warehouse/<%= id %>">
+<form method="post" action="/admin/warehouses/edit-warehouse/<%= warehouse.id %>" enctype="multipart/form-data">
     
     <div class="form-group">
         <label for="">Name</label>
-        <input type="text" class="form-control" name="name" value="<%= name %>" placeholder="Name">
+        <input type="text" class="form-control" name="name" value="<%= warehouse.name %>" placeholder="Name">
+    </div>
+    <% if (warehouse.image != "") { %>
+    <div class="form-group">
+        <label for="">Current Image</label>
+        <img id="noimage" src="<%= brandImageUrl %>/<%= warehouse.image %>" alt="">
+    </div>
+    <% } %>
+
+    <div class="form-group">
+        <label for="">Image</label>
+        <input type="file" class="form-control" name="image">
+    </div>
+
+    <div class="form-group">
+        <label for="">Display</label>
+        <input type="checkbox" class="form-control" name="display" <%if(warehouse.display){%> checked <%}%>>
     </div>
        
     <button class="btn btn-primary">Submit</button>

@@ -1,10 +1,13 @@
 var express = require('express');
 var router = express.Router();
 var auth = require('../config/auth');
+const paths = require('../config/paths');
 var isAdmin = auth.isAdmin;
+const bucket = require('../config/s3Bucket');
+const addAndRemoveImage = require('../service/addRemoveS3Image');
 // Get category model
 var Warehouse = require('../models/warehouses');
-
+const s3Bucket = bucket('home-brand-images-new');
 
 /* Get warehouses index */
 router.get('/', isAdmin, function (req, res) {
@@ -30,7 +33,10 @@ router.get('/add-warehouse', isAdmin, function (req, res) {
 
 router.post('/add-warehouse', function (req, res) {
 
+    const imageFile = typeof req.files.image !== "undefined" ? req.files.image.name : "";
+
     req.checkBody('name', 'Name must have a value.').notEmpty();
+    req.checkBody('image', 'You must upload an image').isImage(imageFile);
 
     var name = req.body.name;
     var slug = name.replace(/\s+/g, '-').toLowerCase();
@@ -54,11 +60,17 @@ router.post('/add-warehouse', function (req, res) {
                 var warehouse = new Warehouse({
                     name: name,
                     slug: slug,
+                    image: imageFile
                 });
 
                 warehouse.save(function (err) {
                     if (err)
                         return console.log(err);
+
+                    if(imageFile) {
+                        const warehouse_image = req.files.image;
+                        addAndRemoveImage(s3Bucket, 'add', imageFile, warehouse_image);
+                    }
 
                     req.flash('success', 'Warehouse added!');
                     res.redirect('/admin/warehouses');
@@ -78,8 +90,8 @@ router.get('/edit-warehouse/:id', isAdmin, function (req, res) {
             return console.log(err);
 
         res.render('admin/edit_warehouse', {
-            name: warehouse.name,
-            id: warehouse._id
+            warehouse,
+            brandImageUrl: paths.s3BrandImageUrl
         });
     });
 
@@ -91,13 +103,16 @@ router.get('/edit-warehouse/:id', isAdmin, function (req, res) {
  */
 router.post('/edit-warehouse/:id', function (req, res) {
 
+    const imageFile = typeof req.files.image !== "undefined" ? req.files.image.name : "";
+
     req.checkBody('name', 'Name must have a value.').notEmpty();
 
-    var name = req.body.name;
-    var slug = name.replace(/\s+/g, '-').toLowerCase();
-    var id = req.params.id;
+    const name = req.body.name;
+    const slug = name.replace(/\s+/g, '-').toLowerCase();
+    const id = req.params.id;
+    const display = req.body.display;
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
 
     if (errors) {
         res.render('admin/edit_warehouse', {
@@ -119,24 +134,39 @@ router.post('/edit-warehouse/:id', function (req, res) {
                     if (err)
                         return console.log(err);
 
+                        const oldImage = warehouse.image;
+
                         warehouse.name = name;
                         warehouse.slug = slug;
 
+                        if (imageFile != "") {
+                            warehouse.image = imageFile;
+                        }
+                        warehouse.display = display == 'on' ? true : false;
+
                         warehouse.save(function (err) {
-                        if (err)
-                            return console.log(err);
+                            const warehouse_image = req.files.image;
+                            if (err)
+                                return console.log(err);
 
-                        Warehouse.find(function (err, categories) {
-                            if (err) {
-                                console.log(err);
-                            } else {
-                                req.app.locals.categories = categories;
+                            if (imageFile != "") {
+                                if(oldImage) {                                
+                                    addAndRemoveImage(s3Bucket, 'delete', oldImage)
+                                }                            
+                                addAndRemoveImage(s3Bucket, 'add', imageFile, warehouse_image);                                                        
                             }
-                        });
 
-                        req.flash('success', 'warehouse edited!');
-                        res.redirect('/admin/warehouses/edit-warehouse/' + id);
-                    });
+                            Warehouse.find(function (err, categories) {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    req.app.locals.categories = categories;
+                                }
+                            });
+
+                            req.flash('success', 'warehouse edited!');
+                            res.redirect('/admin/warehouses/edit-warehouse/' + id);
+                        });
 
                 });
 

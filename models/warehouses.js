@@ -9,6 +9,13 @@ var WarehouseSchema = mongoose.Schema({
     },
     slug: {
         type: String
+    },
+    image: {
+        type: String
+    },
+    display: { 
+        type: Boolean , 
+        default: true 
     }
 });
 

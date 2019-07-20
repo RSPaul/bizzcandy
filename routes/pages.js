@@ -10,6 +10,7 @@ var Product = require('../models/product');
 var Promotion = require('../models/promotion');
 var BrandImage = require('../models/brand_image');
 var CategoryImage = require('../models/category_image');
+var Warehouses = require('../models/warehouses');
 /*
  * GET /
  */
@@ -18,7 +19,7 @@ router.get('/', function (req, res) {
     Page.findOne({slug: 'home'}, function (err, page) {
         Product.find({featured: true, instock: true}, function (err, products) {
             Promotion.find({display: true}, (err, promotions) => {
-                BrandImage.find({display: true}, (err, brandImages) => {
+                Warehouses.find({}, (err, Warehouses) => {
                     CategoryImage.find({display: true}, (err, categoryImages) => {
 
                         if (err) console.log(err);
@@ -32,7 +33,7 @@ router.get('/', function (req, res) {
                             productImageUrl: paths.s3ImageUrl,
                             promotions: promotions,
                             promotionImageUrl: paths.s3PromotionsImageUrl,
-                            brandImages: brandImages,
+                            brandImages: Warehouses,
                             brandImageUrl: paths.s3BrandImageUrl,
                             categoryImages: categoryImages,
                             categoryImageUrl: paths.s3CategoryImageUrl

@@ -33,6 +33,7 @@ router.post("/search", isAdmin, (req, res) => {
       ]
     },
     (err, products) => {
+      console.log('airheads ', products , searchText);
       if (err) {
         console.log(err);
       }

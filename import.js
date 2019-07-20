@@ -44,26 +44,26 @@ function updateProduct(product, brand, callback) {
   });
 }
 
-app.get('/', function (req, res) {
-      var foundCounter = 0;
-      var notFoundCounter = 0;
-      const jsonFilePath=path.resolve(__dirname, 'orders/missingCodes.json');
-      var jsonObj = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
-          jsonObj.map(obj => {
-            updateCode(obj, function (err, found) {
-              console.log('==> found ', found , '\n');
-              if(found) {
-                found.product_code = obj.ProductCode;
-                found.save();
-                foundCounter++;
-              } else {
-                notFoundCounter++;
-              }
-              console.log('found ', foundCounter , ' not found ', notFoundCounter);
-            });
-          });
-        res.send('done');
-});
+// app.get('/', function (req, res) {
+//       var foundCounter = 0;
+//       var notFoundCounter = 0;
+//       const jsonFilePath=path.resolve(__dirname, 'orders/missingCodes.json');
+//       var jsonObj = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
+//           jsonObj.map(obj => {
+//             updateCode(obj, function (err, found) {
+//               console.log('==> found ', found , '\n');
+//               if(found) {
+//                 found.product_code = obj.ProductCode;
+//                 found.save();
+//                 foundCounter++;
+//               } else {
+//                 notFoundCounter++;
+//               }
+//               console.log('found ', foundCounter , ' not found ', notFoundCounter);
+//             });
+//           });
+//         res.send('done');
+// });
 
 
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
@@ -155,6 +155,47 @@ app.get('/upload_images', function(req, res) {
   // addAndRemoveImage(s3Bucket, "add", imageFile, productImage);
 });
 
+//update ware houses for products
+app.get('/stock/true', function (req, res) {
+      // const jsonFilePath=path.resolve(__dirname, 'orders/Bizzcandy-Stock/BizzcandyOrderForm11thJuly2019.json');
+      // var jsonObj = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
+      // console.log('jsonObj ', jsonObj);
+      Product.update({brand: "adult-sweets"}, { $set:{ "instock" : true } }, { multi : true } ).exec(function() {
+        console.log('all updated');
+      });
+      // var foundCounter = 0;
+      //     jsonObj.map(product => {
+      //       // console.log('\n ==> ', product.CODE);
+      //       // Product.findOne({product_code: product.CODE}, function (err, found) {
+      //       Product.update({product_code: product.CODE}, {$set:{ "instock" : true }}, function (err, found) {
+      //         if(found && found != null) {
+      //           foundCounter++;
+      //           console.log('found for ', found.product_code);
+      //           console.log('foundCounter ', foundCounter);
+      //         }
+      //       });
+      //     });
+
+    res.send('done');
+});
+
+var productsToLink = [
+"GP04"
+,"GP05"
+,"GP06"
+,"GP07"
+,"GP08"
+];
+
+
+app.get('/linkwithwh', function (req, res) {
+    // Product.find({product_code: {$in:productsToLink}}).exec(function(err, prds) {
+      Product.update({product_code: {$in:productsToLink}}, { $set:{"category": "gift-packs", "brand": "adult-sweets", "warehouse": "adult-sweets" }}, { multi : true } ).exec(function(err, done) {
+        console.log('all updated ', err, done);
+      });
+
+    res.send('done');
+});
 // Start the server
 const port = process.env.PORT || 9000;
 app.listen(port, function () {
