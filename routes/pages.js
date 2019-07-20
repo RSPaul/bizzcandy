@@ -19,7 +19,7 @@ router.get('/', function (req, res) {
     Page.findOne({slug: 'home'}, function (err, page) {
         Product.find({featured: true, instock: true}, function (err, products) {
             Promotion.find({display: true}, (err, promotions) => {
-                Warehouses.find({}, (err, Warehouses) => {
+                Warehouses.find({display: true}, (err, Warehouses) => {
                     CategoryImage.find({display: true}, (err, categoryImages) => {
 
                         if (err) console.log(err);

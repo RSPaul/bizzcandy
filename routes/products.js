@@ -131,6 +131,30 @@ router.get('/categories/category/:category', function (req, res) {
 
 });
 
+
+router.get('/warehouses/warehouse/:warehouse', function (req, res) {
+    const warehouseSlug = req.params.warehouse;
+    const loggedIn = (req.isAuthenticated()) ? true : false;
+
+    Category.findOne({}, function (err, c) {
+        Product.find({warehouse: warehouseSlug, instock: true}, function (err, products) {
+            if (err)
+                console.log(err);
+
+            applyDiscountPrice(loggedIn, res, products);
+
+            res.render('brand_products', {
+                title: c.name,
+                products: products,
+                count: products.length,
+                loggedIn: loggedIn,
+                productImageUrl: paths.s3ImageUrl
+            });
+        });
+    });
+
+});
+
 module.exports = router;
 
 function searchProduct(searchText, loggedIn, res) {
