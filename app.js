@@ -59,7 +59,7 @@ Brand.find(function (err, brands) {
     } else {
         app.locals.brands = brands;
     }
-});
+}).sort({'name': 1});
 
 // Get Category model;
 var Category = require('./models/category');
@@ -71,7 +71,7 @@ Category.find(function (err, categories) {
     } else {
         app.locals.categories = categories;
     }
-});
+}).sort({'name': 1});
 
 // Express fileUpload middleware
 app.use(fileUpload());

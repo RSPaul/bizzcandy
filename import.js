@@ -180,17 +180,17 @@ app.get('/stock/true', function (req, res) {
 });
 
 var productsToLink = [
-"GP04"
-,"GP05"
-,"GP06"
-,"GP07"
-,"GP08"
+"GP04",
+"GP05",
+"GP06",
+"GP07",
+"GP08",
 ];
 
 
 app.get('/linkwithwh', function (req, res) {
     // Product.find({product_code: {$in:productsToLink}}).exec(function(err, prds) {
-      Product.update({product_code: {$in:productsToLink}}, { $set:{"category": "gift-packs", "brand": "adult-sweets", "warehouse": "adult-sweets" }}, { multi : true } ).exec(function(err, done) {
+      Product.update({product_code: {$in:productsToLink}}, { $set:{"category": "", "brand": "gift-packs"}}, { multi : true } ).exec(function(err,done) {
         console.log('all updated ', err, done);
       });
 
