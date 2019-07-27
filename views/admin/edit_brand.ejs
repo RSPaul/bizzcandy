@@ -4,11 +4,37 @@
 <a href="/admin/brands" class="btn btn-primary">Back to all brands</a>
 <br><br>
 
-<form method="post" action="/admin/brands/edit-brand/<%= id %>">
+<form method="post" action="/admin/brands/edit-brand/<%= brand.id %>" enctype="multipart/form-data">
     
     <div class="form-group">
         <label for="">Name</label>
-        <input type="text" class="form-control" name="name" value="<%= name %>" placeholder="Name">
+        <input type="text" class="form-control" name="name" value="<%= brand.name %>" placeholder="Name">
+    </div>
+
+    <div class="form-group">
+        <label for="">Warehouse</label>
+        <select name="warehouse" class="form-control" required>
+        	<option value="">Select Warehouse</option>
+        	<% warehouses.forEach(function(warehouse){ %>
+                <option value="<%= warehouse.slug %>" <% if(warehouse.slug == brand.warehouse){ %> selected="selected" <% } %>><%= warehouse.name %></option>
+            <% }); %>
+        </select>
+    </div>
+
+    <% if (brand.image == "") { %>
+	    <div class="form-group">
+	        <label for="">Current Image</label>
+	        <p>
+	            <img id="noimage" src="/images/noimage.png" alt="" class="form-control">
+	            <% } else {%>
+	            <img id="noimage" src="<%= brandImageUrl %>/<%= brand.image %>" alt="" class="form-control">
+	        </p>
+	    </div>
+    <% } %>
+
+    <div class="form-group">
+        <label for="">Image</label>
+        <input type="file" class="form-control" name="image" >
     </div>
        
     <button class="btn btn-primary">Submit</button>

@@ -9,6 +9,12 @@ var BrandSchema = mongoose.Schema({
     },
     slug: {
         type: String
+    },
+    image: {
+        type: String
+    },
+    warehouse: {
+        type: String
     }    
 });
 

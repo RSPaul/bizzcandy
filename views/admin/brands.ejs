@@ -9,6 +9,8 @@
     <thead>
         <tr>
             <th>Brand</th>
+            <th>Warehouse</th>
+            <th>Image</th>
             <th>Edit</th>
             <th>Delete</th>
         </tr>
@@ -17,6 +19,16 @@
         <% brands.forEach(function(brnd){ %>
         <tr>
             <td><%= brnd.name %></td>
+            <td><%= brnd.warehouse %></td>
+            <td class="CartProductThumb">
+                <div>                                                                              
+                    <% if (brnd.image == "" || !brnd.image) { %>
+                        <img id="noimage" src="/images/noimage.jpeg">
+                    <% } else {%>
+                        <img id="noimage" src="<%=brandImageUrl %>/<%= brnd.image %>">
+                    <% }%>                                             
+                </div>
+            </td>
             <td><a href="/admin/brands/edit-brand/<%= brnd._id %>">Edit</a></td>
             <td><a class="confirmDeletion" href="/admin/brands/delete-brand/<%= brnd._id %>">Delete</a></td>
         </tr>

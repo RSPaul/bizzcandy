@@ -23,8 +23,8 @@
                     <td><%= promotion.title %></td>                                         
                     <td class="CartProductThumb">
                         <div>                                                                              
-                            <% if (promotion.image == "") { %>
-                            <img id="noimage" src="/images/noimage.jpg">
+                            <% if (promotion.image == "" || !promotion.image) { %>
+                            <img id="noimage" src="/images/noimage.jpeg">
                             <% } else {%>
                             <img id="noimage" src="<%=productImageUrl %>/<%= promotion.image %>">
                             <% }%>                                             

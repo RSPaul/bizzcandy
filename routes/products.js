@@ -136,23 +136,39 @@ router.get('/warehouses/warehouse/:warehouse', function (req, res) {
     const warehouseSlug = req.params.warehouse;
     const loggedIn = (req.isAuthenticated()) ? true : false;
 
-    Category.findOne({}, function (err, c) {
-        Product.find({warehouse: warehouseSlug, instock: true}, function (err, products) {
-            if (err)
-                console.log(err);
+    // Brand.find(function (err, brands) {
+    //     if (err) {
+    //         console.log(err);
+    //     } else {
+    //         app.locals.brands = brands;
+    //     }
+    // }).sort({'name': 1});
+    Brand.find({"warehouse": warehouseSlug}, function (err, brands) {
+        Category.findOne({}, function (err, c) {
+            //Product.find({warehouse: warehouseSlug, instock: true}, function (err, products) {
+                if (err)
+                    console.log(err);
 
-            applyDiscountPrice(loggedIn, res, products);
+                //applyDiscountPrice(loggedIn, res, products);
 
-            res.render('brand_products', {
-                title: c.name,
-                products: products,
-                count: products.length,
-                loggedIn: loggedIn,
-                productImageUrl: paths.s3ImageUrl
-            });
+                res.render('warehouse_brands', {
+                    title: c.name,
+                    count: brands.length,
+                    loggedIn: loggedIn,
+                    brandImageUrl: paths.s3BrandImageUrl,
+                    brands: brands
+                });
+                // res.render('brand_products', {
+                //     title: c.name,
+                //     products: products,
+                //     count: products.length,
+                //     loggedIn: loggedIn,
+                //     productImageUrl: paths.s3ImageUrl,
+                //     brands: brands
+                // });
+           // });
         });
     });
-
 });
 
 module.exports = router;
