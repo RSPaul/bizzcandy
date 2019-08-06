@@ -84,6 +84,37 @@ router.get('/:brand', function (req, res) {
 
 });
 
+router.get('/warehouse_brand/:brand/:warehouse', function (req, res) {
+    const brandSlug = req.params.brand;
+    const warehouseSlug = req.params.warehouse;
+
+    if(brandSlug === 'search') {
+        res.redirect('/products/search');
+        return;
+    }
+
+    const loggedIn = (req.isAuthenticated()) ? true : false;
+
+    Brand.find({"warehouse": warehouseSlug}, function (err, c) {
+        Product.find({brand: brandSlug, instock: true}, function (err, products) {
+            if (err)
+                console.log(err);
+
+            applyDiscountPrice(loggedIn, res, products);
+
+            res.render('brand_products', {
+                title: c.name,
+                products: products,
+                count: products.length,
+                loggedIn: loggedIn,
+                brands: c,
+                productImageUrl: paths.s3ImageUrl
+            });
+        });
+    });
+
+});
+
 router.get('/:brand/:product', function (req, res) {
     
     const loggedIn = (req.isAuthenticated()) ? true : false;
@@ -156,7 +187,8 @@ router.get('/warehouses/warehouse/:warehouse', function (req, res) {
                     count: brands.length,
                     loggedIn: loggedIn,
                     brandImageUrl: paths.s3BrandImageUrl,
-                    brands: brands
+                    brands: brands,
+                    warehouse: warehouseSlug
                 });
                 // res.render('brand_products', {
                 //     title: c.name,

@@ -27,7 +27,7 @@
                         <% } %>
                             <div class="product">                        
                                 <div class="image">                            
-                                    <a href="/products/<%= b.slug %>" target="_blank">
+                                    <a href="/products/warehouse_brand/<%= b.slug %>/<%= warehouse %>" target="_blank">
                                         <% if(b.image == "" || !b.image) { %>
                                             <img id="noimage" src="/images/noimage.jpeg">
                                         <% } else { %>
@@ -36,7 +36,7 @@
                                     </a>                           
                                 </div>
                                 <div class="description">
-                                    <h4><a href="/products/<%= b.slug %>"><%= b.name %></a></h4>                   
+                                    <h4><a href="/products/warehouse_brand/<%= b.slug %>/<%= warehouse %>"><%= b.name %></a></h4>                   
                                 </div>
                             </div>
                         </div>
