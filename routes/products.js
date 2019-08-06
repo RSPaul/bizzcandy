@@ -73,7 +73,7 @@ router.get('/:brand', function (req, res) {
             applyDiscountPrice(loggedIn, res, products);
 
             res.render('brand_products', {
-                title: (c && c.name) ? c.name : '',,
+                title: (c && c.name) ? c.name : '',
                 products: products,
                 count: products.length,
                 loggedIn: loggedIn,
@@ -103,7 +103,7 @@ router.get('/warehouse_brand/:brand/:warehouse', function (req, res) {
             applyDiscountPrice(loggedIn, res, products);
 
             res.render('brand_products', {
-                title: (c && c.name) ? c.name : '',,
+                title: (c && c.name) ? c.name : '',
                 products: products,
                 count: products.length,
                 loggedIn: loggedIn,
@@ -183,7 +183,7 @@ router.get('/warehouses/warehouse/:warehouse', function (req, res) {
                 //applyDiscountPrice(loggedIn, res, products);
 
                 res.render('warehouse_brands', {
-                    title: (c && c.name) ? c.name : '',,
+                    title: (c && c.name) ? c.name : '',
                     count: brands.length,
                     loggedIn: loggedIn,
                     brandImageUrl: paths.s3BrandImageUrl,
@@ -191,7 +191,7 @@ router.get('/warehouses/warehouse/:warehouse', function (req, res) {
                     warehouse: warehouseSlug
                 });
                 // res.render('brand_products', {
-                //     title: (c && c.name) ? c.name : '',,
+                //     title: (c && c.name) ? c.name : '',
                 //     products: products,
                 //     count: products.length,
                 //     loggedIn: loggedIn,
