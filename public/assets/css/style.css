@@ -6542,3 +6542,6 @@ table.cartTable.table-responsive.text-right {
     padding-left: 0;
     padding-right: 0;
 }
+.row.home-intro-head {
+    display: none;
+}

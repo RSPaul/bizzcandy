@@ -87,7 +87,7 @@ app.use(session({
   secret: 'keyboard cat',
   resave: true,
   saveUninitialized: true,
-  //cookie: { secure: true }
+  cookie:{maxAge:60000000}
 }));
 
 require('./middleware/validator')(app);
