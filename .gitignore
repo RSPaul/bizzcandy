@@ -3,14 +3,15 @@ tests/
 dev.js
 .eslintrc
 .vscode
-#config/database.js
-#config/prod.js
+config/database.js
+config/prod.js
 config/dev.js
 orders/
-#config/email.js
+config/email.js
 import.js
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 import.js
+.env
