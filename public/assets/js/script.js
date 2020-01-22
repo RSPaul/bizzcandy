@@ -381,7 +381,11 @@ $(document).ready(function () {
     if (isMobile()) {
         // For  mobile , ipad, tab
         $('.introContent').addClass('ismobile');
-
+        //close the category and brand menus
+        setTimeout(function () {
+            $('#collapseCategory').removeClass('in');
+            $('#collapseBrand').removeClass('in');
+        },1000);
 
     } else {
 

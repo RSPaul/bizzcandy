@@ -6545,3 +6545,18 @@ table.cartTable.table-responsive.text-right {
 .row.home-intro-head {
     display: none;
 }
+.col-lg-9.col-md-9.col-sm-12.top-margin {
+    margin-top: 40px;
+}
+ul.breadcums-menu {
+    font-size: 14px;
+    font-weight: bold;
+    color: #7742F8;
+}
+ul.breadcums-menu li a {
+    text-transform: uppercase;
+    color: #7742F8;
+}
+ul.breadcums-menu li a span.sep {
+    padding: 0 5px;
+}

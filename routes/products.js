@@ -6,6 +6,7 @@ const Brand = require('../models/brand');
 const Category = require('../models/category');
 const validateDiscountCode = require('../service/validateDiscountCode');
 const applyDiscount = require('../service/applyDiscount');
+const Warehouse = require('../models/warehouses');
 
 let allBrandSlugs = [];
 
@@ -19,12 +20,15 @@ router.get('/', function (req, res) {
 
         applyDiscountPrice(loggedIn, res, products);
 
+        const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products">Products</a></li>';
+
         res.render('all_products', {
             title: 'All products',
             products: products,
             count: products.length,
             loggedIn: loggedIn,
-            productImageUrl: paths.s3ImageUrl
+            productImageUrl: paths.s3ImageUrl,
+            breadcumsHtml: breadcumsHtml
         });
     });
 
@@ -64,20 +68,60 @@ router.get('/:brand', function (req, res) {
     }
 
     const loggedIn = (req.isAuthenticated()) ? true : false;
+    //first find warehouse name
+    Brand.findOne({"slug": brandSlug}, function (err, brandInfo) {
+        //now find brand
+        const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products">Products <span class="sep"> >> </span> </a>'+ brandInfo.name +' </li>';
+        Brand.find({"warehouse": brandInfo.warehouse}, function (err, c) {
+            Product.find({brand: brandSlug, instock: true}, function (err, products) {
+                if (err)
+                    console.log(err);
 
-    Brand.findOne({slug: brandSlug}, function (err, c) {
-        Product.find({brand: brandSlug, instock: true}, function (err, products) {
+                applyDiscountPrice(loggedIn, res, products);
+
+                res.render('brand_products', {
+                    title: (c && c.name) ? c.name : '',
+                    products: products,
+                    count: products.length,
+                    loggedIn: loggedIn,
+                    brands: c,
+                    productImageUrl: paths.s3ImageUrl,
+                    breadcumsHtml: breadcumsHtml
+                });
+            });
+        });
+    });
+
+});
+
+router.get('/warehouse_products/:warehouse', function (req, res) {
+    // const brandSlug = req.params.brand;
+    const warehouseSlug = req.params.warehouse;
+
+    // if(brandSlug === 'search') {
+    //     res.redirect('/products/search');
+    //     return;
+    // }
+
+    const loggedIn = (req.isAuthenticated()) ? true : false;
+
+    Brand.find({"warehouse": warehouseSlug}, function (err, c) {
+        Product.find({warehouse: warehouseSlug, instock: true}, function (err, products) {
             if (err)
                 console.log(err);
 
-            applyDiscountPrice(loggedIn, res, products);
-
-            res.render('brand_products', {
-                title: (c && c.name) ? c.name : '',
-                products: products,
-                count: products.length,
-                loggedIn: loggedIn,
-                productImageUrl: paths.s3ImageUrl
+        Warehouse.findOne({"slug": warehouseSlug}, function (err, warehouse) {
+                applyDiscountPrice(loggedIn, res, products);
+                const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products">Products <span class="sep"> >> </span> </a>'+ warehouse.name +' </li>';
+                res.render('brand_products', {
+                    title: (c && c.name) ? c.name : '',
+                    products: products,
+                    count: products.length,
+                    loggedIn: loggedIn,
+                    brands: c,
+                    productImageUrl: paths.s3ImageUrl,
+                    breadcumsHtml: breadcumsHtml
+                });
             });
         });
     });
@@ -101,14 +145,15 @@ router.get('/warehouse_brand/:brand/:warehouse', function (req, res) {
                 console.log(err);
 
             applyDiscountPrice(loggedIn, res, products);
-
+            const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products">Products <span class="sep"> >> </span> </a>'+ brandInfo.name +' </li>';
             res.render('brand_products', {
                 title: (c && c.name) ? c.name : '',
                 products: products,
                 count: products.length,
                 loggedIn: loggedIn,
                 brands: c,
-                productImageUrl: paths.s3ImageUrl
+                productImageUrl: paths.s3ImageUrl,
+                breadcumsHtml: breadcumsHtml
             });
         });
     });
@@ -116,25 +161,32 @@ router.get('/warehouse_brand/:brand/:warehouse', function (req, res) {
 });
 
 router.get('/:brand/:product', function (req, res) {
-    
     const loggedIn = (req.isAuthenticated()) ? true : false;
+    const brandSlug = req.params.brand;
     let products = [];
-
-    Product.findOne({slug: req.params.product}, function (err, product) {
-        if (err) {
-            console.log(err);
-        } else {  
-            products.push(product);            
-            applyDiscountPrice(loggedIn, res, products);
-            
-            res.render('product', {
-                title: product.name,
-                p: product,
-                productImageUrl: paths.s3ImageUrl,
-                loggedIn: loggedIn,
-                productImageUrl: paths.s3ImageUrl
+    //first find warehouse name
+    Brand.findOne({"slug": brandSlug}, function (err, brandInfo) {
+        //now find brand
+        Brand.find({"warehouse": brandInfo.warehouse}, function (err, c) {
+            Product.findOne({slug: req.params.product}, function (err, product) {
+                if (err) {
+                    console.log(err);
+                } else {  
+                    products.push(product);            
+                    applyDiscountPrice(loggedIn, res, products);
+                    const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products">Products <span class="sep"> >> </span> </a><a href="/products/'+ brandSlug +'">'+ brandInfo.name +'</a></li>';
+                    res.render('product', {
+                        title: product.name,
+                        p: product,
+                        brands: c,
+                        productImageUrl: paths.s3ImageUrl,
+                        loggedIn: loggedIn,
+                        productImageUrl: paths.s3ImageUrl,
+                        breadcumsHtml: breadcumsHtml
+                    });
+                }
             });
-        }
+        });
     });
 
 });
@@ -150,12 +202,15 @@ router.get('/categories/category/:category', function (req, res) {
 
             applyDiscountPrice(loggedIn, res, products);
 
+            const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products">Products <span class="sep"> >> </span> </a><a href="/products/categories/category/'+ categorySlug +'">'+ c.name +'</a></li>';
+
             res.render('brand_products', {
                 title: (c && c.name) ? c.name : '',
                 products: products,
                 count: products.length,
                 loggedIn: loggedIn,
-                productImageUrl: paths.s3ImageUrl
+                productImageUrl: paths.s3ImageUrl,
+                breadcumsHtml: breadcumsHtml
             });
         });
     });
@@ -176,19 +231,20 @@ router.get('/warehouses/warehouse/:warehouse', function (req, res) {
     // }).sort({'name': 1});
     Brand.find({"warehouse": warehouseSlug}, function (err, brands) {
         Category.findOne({}, function (err, c) {
-            //Product.find({warehouse: warehouseSlug, instock: true}, function (err, products) {
+            Warehouse.findOne({slug: warehouseSlug}, function (err, warehouse) {
                 if (err)
                     console.log(err);
 
                 //applyDiscountPrice(loggedIn, res, products);
-
+                const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products">Products <span class="sep"> >> </span> </a><a href="/products/warehouse_products/'+ warehouse.slug +'">'+ warehouse.name +' </li>';
                 res.render('warehouse_brands', {
                     title: (c && c.name) ? c.name : '',
                     count: brands.length,
                     loggedIn: loggedIn,
                     brandImageUrl: paths.s3BrandImageUrl,
                     brands: brands,
-                    warehouse: warehouseSlug
+                    warehouse: warehouseSlug,
+                    breadcumsHtml: breadcumsHtml
                 });
                 // res.render('brand_products', {
                 //     title: (c && c.name) ? c.name : '',
@@ -198,7 +254,7 @@ router.get('/warehouses/warehouse/:warehouse', function (req, res) {
                 //     productImageUrl: paths.s3ImageUrl,
                 //     brands: brands
                 // });
-           // });
+           });
         });
     });
 });
@@ -222,6 +278,7 @@ function searchProduct(searchText, loggedIn, res) {
         if (err) {
             console.log(err);
         }
+        const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products">Products <span class="sep"> >> </span> </a> Serach </li>';
         applyDiscountPrice(loggedIn, res, products);
         res.render('all_products', {
             title: 'search products',
@@ -230,6 +287,7 @@ function searchProduct(searchText, loggedIn, res) {
             count: products.length,
             loggedIn: loggedIn,
             productImageUrl: paths.s3ImageUrl,
+            breadcumsHtml: breadcumsHtml
         });
     });
 }
