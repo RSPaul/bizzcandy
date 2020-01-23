@@ -34,6 +34,14 @@ app.set('view engine', 'ejs');
 // Set public folder
 app.use(express.static(path.join(__dirname, 'public')));
 
+//400 error page
+// app.get('*', function(req, res){
+//   res.status(404).render('404', {user: '', messages:''});
+// });
+// app.get('*', function(req, res){
+//   res.status(500).render('error', {user: '', messages:''});
+// });
+
 // Set global errors variable
 app.locals.errors = null;
 

@@ -31,7 +31,7 @@ router.get('/register', function (req, res) {
 
     res.render('register', {
         title: 'Register',
-        data: {name: "", email:"", telephone:"", address_line1:"", city:"", county:"", postcode:"", country:"", username:"", password:"", password2:""}
+        data: {name: "", email:"", telephone:"", address_line1:"", city:"", county:"", postcode:"", country:"", username:"", password:"", password2:"", breadcumsHtml: ""}
     });
 
 });
@@ -75,7 +75,8 @@ router.post('/register', function (req, res) {
                     errors: errors,
                     user: null,
                     title: 'Register',
-                    data: req.body
+                    data: req.body,
+                    breadcumsHtml: ""
                 });
             } else {
                 var user = new User({
@@ -172,10 +173,10 @@ router.get('/delete/:id', isAdmin, (req, res) => {
 router.get('/login', function (req, res) {
 
     if (res.locals.user) res.redirect('/');
-    
+    console.log('render login');
     res.render('login', {
         title: 'Log in',
-        data: {username: "", password:""}
+        data: {username: "", password:"", breadcumsHtml: ""}
     });
 
 });
@@ -203,7 +204,8 @@ router.get('/forgot', function (req, res) {
 
     res.render('forgot_password', {
         title: 'Forgot Password',
-        email: ''
+        email: '',
+        breadcumsHtml: ""
     });
 
 });
@@ -245,7 +247,8 @@ router.post('/forgot', function (req, res) {
                             // done(err, 'done');
                             res.render('forgot_password', {
                                 title: 'Forgot Password',
-                                email: ""
+                                email: "",
+                                breadcumsHtml: ""
                             });
                         });
                     });
@@ -256,7 +259,8 @@ router.post('/forgot', function (req, res) {
                 req.flash('danger', 'User not found!');
                 res.render('forgot_password', {
                     title: 'Forgot Password',
-                    email: req.body.email
+                    email: req.body.email,
+                    breadcumsHtml: ""
                 });
             }
         });
@@ -273,6 +277,7 @@ router.get('/reset/:token', function(req, res) {
       user: user,
       token: req.params.token,
       title: 'Reset Password',
+      breadcumsHtml: ""
     });
   });
 });

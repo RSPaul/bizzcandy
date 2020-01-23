@@ -7,11 +7,11 @@
             <!--left column-->
 
             <div class="col-lg-3 col-md-3 col-sm-12">
-                <% include _layouts/sitenav.ejs %>
+                <%# include _layouts/sitenav.ejs %>
             </div>
 
             <!--right column-->
-            <div class="col-lg-9 col-md-9 col-sm-12">
+            <div class="col-lg-6 col-md-6 col-sm-12">
                 <h1><%= title %></h1>
 
                     <form method="post" action="/users/register">
@@ -75,6 +75,9 @@
 
             </div>
             <!--/right column end-->
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <%# include _layouts/sitenav.ejs %>
+            </div>
         </div>
         <!-- /.row  -->
     </div>
