@@ -139,25 +139,28 @@ router.get('/warehouse_brand/:brand/:warehouse', function (req, res) {
 
     const loggedIn = (req.isAuthenticated()) ? true : false;
 
-    Brand.find({"warehouse": warehouseSlug}, function (err, c) {
-        Product.find({brand: brandSlug, instock: true}, function (err, products) {
-            if (err)
-                console.log(err);
+    Warehouse.findOne({"slug": warehouseSlug}, function (err, warehouseInfo) {
+        Brand.find({"warehouse": warehouseSlug}, function (err, c) {
+            Brand.findOne({"slug": brandSlug}, function (err, brandInfo) {
+                Product.find({brand: brandSlug, instock: true}, function (err, products) {
+                    if (err)
+                        console.log(err);
 
-            applyDiscountPrice(loggedIn, res, products);
-            const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products">Products <span class="sep"> >> </span> </a>'+ brandInfo.name +' </li>';
-            res.render('brand_products', {
-                title: (c && c.name) ? c.name : '',
-                products: products,
-                count: products.length,
-                loggedIn: loggedIn,
-                brands: c,
-                productImageUrl: paths.s3ImageUrl,
-                breadcumsHtml: breadcumsHtml
+                    applyDiscountPrice(loggedIn, res, products);
+                    const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products">Products <span class="sep"> >> </span> </a><a href="/products/warehouse_products/'+ warehouseSlug +'"> '+ warehouseInfo.slug +' <span class="sep"> >> </span> </a>'+ brandInfo.name +' </li>';
+                    res.render('brand_products', {
+                        title: (c && c.name) ? c.name : '',
+                        products: products,
+                        count: products.length,
+                        loggedIn: loggedIn,
+                        brands: c,
+                        productImageUrl: paths.s3ImageUrl,
+                        breadcumsHtml: breadcumsHtml
+                    });
+                });
             });
         });
     });
-
 });
 
 router.get('/:brand/:product', function (req, res) {
