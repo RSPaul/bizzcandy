@@ -71,7 +71,7 @@ router.get('/:brand', function (req, res) {
     //first find warehouse name
     Brand.findOne({"slug": brandSlug}, function (err, brandInfo) {
         //now find brand
-        const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products">Products <span class="sep"> >> </span> </a>'+ brandInfo.name +' </li>';
+        const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a>'+ brandInfo.name +' </li>';
         Brand.find({"warehouse": brandInfo.warehouse}, function (err, c) {
             Product.find({brand: brandSlug, instock: true}, function (err, products) {
                 if (err)
@@ -147,7 +147,7 @@ router.get('/warehouse_brand/:brand/:warehouse', function (req, res) {
                         console.log(err);
 
                     applyDiscountPrice(loggedIn, res, products);
-                    const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products">Products <span class="sep"> >> </span> </a><a href="/products/warehouse_products/'+ warehouseSlug +'"> '+ warehouseInfo.slug +' <span class="sep"> >> </span> </a>'+ brandInfo.name +' </li>';
+                    const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products/warehouse_products/'+ warehouseSlug +'"> '+ warehouseInfo.slug +' <span class="sep"> >> </span> </a>'+ brandInfo.name +' </li>';
                     res.render('brand_products', {
                         title: (c && c.name) ? c.name : '',
                         products: products,
@@ -172,22 +172,25 @@ router.get('/:brand/:product', function (req, res) {
         //now find brand
         Brand.find({"warehouse": brandInfo.warehouse}, function (err, c) {
             Product.findOne({slug: req.params.product}, function (err, product) {
-                if (err) {
-                    console.log(err);
-                } else {  
-                    products.push(product);            
-                    applyDiscountPrice(loggedIn, res, products);
-                    const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products">Products <span class="sep"> >> </span> </a><a href="/products/'+ brandSlug +'">'+ brandInfo.name +'</a></li>';
-                    res.render('product', {
-                        title: product.name,
-                        p: product,
-                        brands: c,
-                        productImageUrl: paths.s3ImageUrl,
-                        loggedIn: loggedIn,
-                        productImageUrl: paths.s3ImageUrl,
-                        breadcumsHtml: breadcumsHtml
-                    });
-                }
+                //find warehouse
+                Warehouse.findOne({slug: brandInfo.warehouse}, function(errW, warehouseInfo) {
+                    if (err) {
+                        console.log(err);
+                    } else {  
+                        products.push(product);            
+                        applyDiscountPrice(loggedIn, res, products);
+                        const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products/warehouse_products/'+ warehouseInfo.slug +'">'+ warehouseInfo.name +' <span class="sep"> >> </span> </a><a href="/products/'+ brandSlug +'">'+ brandInfo.name +'<span class="sep"> >> </span></a> '+ product.name +'</li>';
+                        res.render('product', {
+                            title: product.name,
+                            p: product,
+                            brands: c,
+                            productImageUrl: paths.s3ImageUrl,
+                            loggedIn: loggedIn,
+                            productImageUrl: paths.s3ImageUrl,
+                            breadcumsHtml: breadcumsHtml
+                        });
+                    }
+                });
             });
         });
     });
@@ -205,7 +208,7 @@ router.get('/categories/category/:category', function (req, res) {
 
             applyDiscountPrice(loggedIn, res, products);
 
-            const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products">Products <span class="sep"> >> </span> </a><a href="/products/categories/category/'+ categorySlug +'">'+ c.name +'</a></li>';
+            const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products/categories/category/'+ categorySlug +'">'+ c.name +'</a></li>';
 
             res.render('brand_products', {
                 title: (c && c.name) ? c.name : '',
@@ -239,7 +242,7 @@ router.get('/warehouses/warehouse/:warehouse', function (req, res) {
                     console.log(err);
 
                 //applyDiscountPrice(loggedIn, res, products);
-                const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products">Products <span class="sep"> >> </span> </a><a href="/products/warehouse_products/'+ warehouse.slug +'">'+ warehouse.name +' </li>';
+                const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products/warehouse_products/'+ warehouse.slug +'">'+ warehouse.name +' </li>';
                 res.render('warehouse_brands', {
                     title: (c && c.name) ? c.name : '',
                     count: brands.length,
