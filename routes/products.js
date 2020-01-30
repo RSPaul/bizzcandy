@@ -173,7 +173,7 @@ router.get('/:brand/:product', function (req, res) {
         Brand.find({"warehouse": brandInfo.warehouse}, function (err, c) {
             Product.findOne({slug: req.params.product}, function (err, product) {
                 //find warehouse
-                Warehouse.findOne({slug: brandInfo.warehouse}, function(errW, warehouseInfo) {
+                Warehouse.findOne({slug: brandSlug}, function(errW, warehouseInfo) {
                     if (err) {
                         console.log(err);
                     } else {  
