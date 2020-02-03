@@ -179,16 +179,34 @@ router.get('/:brand/:product', function (req, res) {
                     } else {  
                         products.push(product);            
                         applyDiscountPrice(loggedIn, res, products);
-                        const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products/warehouse_products/'+ warehouseInfo.slug +'">'+ warehouseInfo.name +' <span class="sep"> >> </span> </a><a href="/products/'+ brandSlug +'">'+ brandInfo.name +'<span class="sep"> >> </span></a> '+ product.name +'</li>';
-                        res.render('product', {
-                            title: product.name,
-                            p: product,
-                            brands: c,
-                            productImageUrl: paths.s3ImageUrl,
-                            loggedIn: loggedIn,
-                            productImageUrl: paths.s3ImageUrl,
-                            breadcumsHtml: breadcumsHtml
-                        });
+                        if(!warehouseInfo || warehouseInfo == null ) {
+                             Warehouse.findOne({slug: brandInfo.warehouse}, function(errW, warehouseInfo) {
+
+                                const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products/warehouse_products/'+ warehouseInfo.slug +'">'+ warehouseInfo.name +' <span class="sep"> >> </span> </a><a href="/products/'+ brandSlug +'">'+ brandInfo.name +'<span class="sep"> >> </span></a> '+ product.name +'</li>';
+                                res.render('product', {
+                                    title: product.name,
+                                    p: product,
+                                    brands: c,
+                                    productImageUrl: paths.s3ImageUrl,
+                                    loggedIn: loggedIn,
+                                    productImageUrl: paths.s3ImageUrl,
+                                    breadcumsHtml: breadcumsHtml
+                                });
+                             });
+
+                        } else {
+
+                            const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products/warehouse_products/'+ warehouseInfo.slug +'">'+ warehouseInfo.name +' <span class="sep"> >> </span> </a><a href="/products/'+ brandSlug +'">'+ brandInfo.name +'<span class="sep"> >> </span></a> '+ product.name +'</li>';
+                            res.render('product', {
+                                title: product.name,
+                                p: product,
+                                brands: c,
+                                productImageUrl: paths.s3ImageUrl,
+                                loggedIn: loggedIn,
+                                productImageUrl: paths.s3ImageUrl,
+                                breadcumsHtml: breadcumsHtml
+                            });
+                        }
                     }
                 });
             });
