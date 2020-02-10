@@ -181,8 +181,12 @@ router.get('/:brand/:product', function (req, res) {
                         applyDiscountPrice(loggedIn, res, products);
                         if(!warehouseInfo || warehouseInfo == null ) {
                              Warehouse.findOne({slug: brandInfo.warehouse}, function(errW, warehouseInfo) {
+                                if(warehouseInfo == null) {
+                                    var breadcumsHtml = '';
+                                } else {
 
-                                const breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products/warehouse_products/'+ warehouseInfo.slug +'">'+ warehouseInfo.name +' <span class="sep"> >> </span> </a><a href="/products/'+ brandSlug +'">'+ brandInfo.name +'<span class="sep"> >> </span></a> '+ product.name +'</li>';
+                                    var breadcumsHtml = '<li><a href="/">Home <span class="sep"> >> </span> </a><a href="/products/warehouse_products/'+ warehouseInfo.slug +'">'+ warehouseInfo.name +' <span class="sep"> >> </span> </a><a href="/products/'+ brandSlug +'">'+ brandInfo.name +'<span class="sep"> >> </span></a> '+ product.name +'</li>';
+                                }
                                 res.render('product', {
                                     title: product.name,
                                     p: product,
